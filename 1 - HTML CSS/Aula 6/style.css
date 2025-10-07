@@ -1,0 +1,57 @@
+* {
+    margin: 0; /* Zerar os espaçamentos externos */
+    padding: 0; /* Zerar os espaçamentos internos */
+    box-sizing: border-box; /* Incluir bordas e padding na largura e altura totais dos elementos */
+}
+
+body {
+    background-color: #F0F8FF;
+    font-family: sans-serif;
+    font-size: 18px;
+    color: black;
+    margin-left: 10%;
+    margin-top: 2%;
+}
+
+form {
+    display: flex; /* Usar Flexbox para layout */
+    align-items: center; /* Alinhar itens verticalmente ao centro */
+    justify-content: center; /* Centralizar itens horizontalmente */
+    padding: 20px; /* Espaçamento interno */
+}
+
+.campo {
+    margin-bottom: 16px;
+}
+
+.campo label {
+    margin-bottom: 3px;
+    color: #13004c;
+    display: block; /* os elementos ficam um abaixo do outro (inline ficam na mesma linha) */
+}
+
+.campo input:focus, .campo textarea:focus {
+    background-color: #E0E0F8;
+}
+
+.grupo {
+    display: block;
+    margin-bottom: 16px;
+    color: #13004c;
+}
+
+fieldset {
+    border: 0;
+}
+
+button {
+    font-size: 16px;
+    background-color: black;
+    border: 0;
+    margin: 10px;
+    color: white;
+    cursor: pointer; /* tipo cursor */
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4); /* sombra */
+    padding: 5px; /* espaçamento interno */
+    border-radius: 10px; /* arredondar borda */
+}

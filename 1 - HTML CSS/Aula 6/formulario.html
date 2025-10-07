@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulários HTML</title>
+    <link rel="stylesheet" href="style.css"> <!-- link: usado para linkar arquivos externos, como folhas de estilo CSS -->
+</head>
+<body>
+    <form>
+        <fieldset>
+            <div class="campo">
+                <label for="nome">Nome:</label> <!-- for: deve ter o mesmo valor que o id do input, isso cria uma associação entre o rótulo e o campo -->
+                <input type="text" id="nome" name="nome" placeholder="Digite seu nome" > <!-- placeholder: texto que aparece dentro do campo -->
+                <!-- name: nome do campo, usado para identificar o campo quando o formulário for enviado -->
+                <!-- id: Identificador do campo, e faz o link com a label -->
+            </div>
+
+            <div class="campo">
+                <label for="sobrenome">Sobrenome:</label>
+                <input type="text" id="sobrenome" name="sobrenome" placeholder="Digite seu sobrenome">
+            </div>
+
+            <div class="campo">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Digite seu Email" required>
+            </div>
+
+            <div class="campo">
+                <label for="nasc">Data de Nascimento:</label>
+                <input type="date" id="nasc" name="data_nascimento">
+            </div>
+
+            <div class="grupo">
+                <label for="curso:">Curso:</label>
+                <label><input type="radio" name="curso" value="front-end" checked> Front-end</label>
+                <label><input type="radio" name="curso" value="Back-end"> Back-end</label>
+                <label><input type="radio" name="curso" value="Full-stack"> Full-stack </label>
+            </div>
+
+            <div class="grupo">
+                <label for="turno">Turno:</label>
+                <select name="turno" id="turno">
+                    <option value="manha">Manhã</option>
+                    <option value="tarde">Tarde</option>
+                    <option value="noite">Noite</option>
+                </select>
+            </div>
+
+            <div class="grupo">
+                <label>Experiências:</label>
+                <label><input type="checkbox" name="exp" value="html"> HTML</label>
+                <label><input type="checkbox" name="exp" value="CSS"> CSS </label>
+                <label><input type="checkbox" name="exp" value="Js"> Javascript</label>
+            </div>
+
+            <div class="campo">
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" placeholder="Digite sua senha">
+            </div>
+
+            <div class="campo">
+                <label for="mensagem">Mensagem:</label>
+                <textarea name="mensagem" id="mensagem" cols="30" rows="10" placeholder="Digite sua mensagem"></textarea>
+            </div>
+
+            <div>
+                <button type="submit">Cadastrar</button>
+            </div>
+
+        </fieldset>
+        
+    </form>
+</body>
+</html>
+
+<!--  -->
+
+
+<!-- <form>
+    <div style="background-color: lightcoral;">
+        <p>Uma div é uma divisão ou seção em um documento HTML. Ela é usada para agrupar elementos e aplicar estilos ou scripts a esses grupos.</p>
+    </div>
+    
+    <div style="background-color:brown">
+        <p>É importante para a organização do conteúdo e para a aplicação de estilos CSS, permitindo que os desenvolvedores controlem a aparência e o layout de diferentes partes de uma página web.</p>
+    </div>
+</form> -->
