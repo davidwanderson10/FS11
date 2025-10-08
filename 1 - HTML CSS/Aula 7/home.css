@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu { 
+    width: 500px;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: white;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+

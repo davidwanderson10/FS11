@@ -1,0 +1,48 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(56, 50, 50);
+}
+
+/* 
+Formas de apontar os seletores:
+1. Por elemento (tag)
+2. Por classe (.nome-da-classe)
+3. Por ID (#nome-do-id)
+*/
+
+.container {
+    background-color:rgb(72, 115, 115);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 10px;
+    height: 200px;
+    display: flex;
+    flex-direction: row; /* Direção: row | row-reverse | column | column-reverse */
+    justify-content: space-evenly; /* Alinhamento no eixo principal: flex-start | flex-end | center | space-between | space-around | space-evenly */
+    align-items: center;
+    flex-wrap: wrap;
+    /* gap: 50px; Espaçamento entre os itens */
+}
+
+#item1, #item2, #item3 {
+    padding: 20px;
+    width: 100px;
+    height: 100px;
+}
+
+#item1 {
+    background-color: yellow;
+}
+
+#item2 {
+    background-color: green;
+}
+
+#item3 {
+    background-color: red;
+}
