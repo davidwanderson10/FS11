@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: black;
+}
+
+h1 {
+    color: white;
+    font-size: 50px;
+}
+
+@media (max-width: 800px) {
+    body {
+        background-color: green;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        background-color: blue;
+    }
+
+    h1 {
+        font-size: 25px;
+        color: yellow;
+    }
+}
