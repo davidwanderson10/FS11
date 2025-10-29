@@ -55,14 +55,26 @@ ex: let indefinido
   
 ## Declaração de variáveis
 
-var:  
-Escopo de função, pode ser redeclarada.  
-  
-let:  
-Escopo de bloco, pode ser reatribuída.  
-  
-const:  
-Escopo de bloco, não pode ser reatribuída.  
+var:
+Escopo de função, pode ser redeclarada.
+Ex: 
+```javascript
+var nome = 'João'
+var nome = 'Amanda'
+```
+let:
+Escopo de bloco, pode ser reatribuída.
+Ex: 
+```javascript
+let nome = 'João'
+ nome = 'Amanda'
+```   
+const:
+Escopo de bloco, não pode ser reatribuída.
+Ex: 
+```javascript
+const nome = 'João'
+```
   
 ```javascript
 var x = 10;
