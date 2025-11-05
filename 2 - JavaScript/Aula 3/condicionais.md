@@ -25,3 +25,15 @@ if (condição) {
 }
 
 ```
+
+### Estrutura if - else if - else
+
+```javascript
+
+if (condição) {
+    lógica
+} else if (condição){
+    lógica
+} else {
+    lógica
+}
