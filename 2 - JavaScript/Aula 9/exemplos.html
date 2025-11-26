@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manipulação de DOM</title>
+</head>
+<body>
+    <!-- <h1>Manipulação de DOM - Parágrafo</h1>
+    <p>Este é o parágrafo 1.</p>
+    <p>Este é o parágrafo 2.</p>
+    <p>Este é o parágrafo 3.</p>
+    <script>
+        const primeiroParagrafo = document.querySelector("p");
+        console.log("Primeiro parágrafo:", primeiroParagrafo.textContent);
+        const todosParagrafos = document.querySelectorAll("p");
+        console.log("Todos os parágrafos:", todosParagrafos)
+        ;
+    </script> -->
+
+    <!-- <div id="container"></div>
+    <button >Clique Aqui!</button>
+    <script>
+        const novoParagrafo = document.createElement('p') // criando um novo parágrafo
+        novoParagrafo.textContent = 'Olá, DOM!' // editando o conteúdo do parágrafo
+        document.getElementById('container').appendChild(novoParagrafo) // adicionando o parágrafo como filho da div container
+    </script> -->
+    
+    <!-- <button id="btn" onclick="addParagrafo()">Adicionar Parágrafo</button>
+    <div id="container"></div>
+
+    <script>
+        let contador = 0; // variável para contar os cliques
+        const container = document.getElementById("container"); // seleciona a div container
+
+        const addParagrafo = () => {
+            contador++;
+
+            const paragrafo = document.createElement("p");
+            paragrafo.textContent = `Clique número: ${contador}`;
+
+            container.appendChild(paragrafo);
+        };
+        
+    </script> -->
+
+    <!-- <input type="text" id="campo" placeholder="Digite algo">
+    <button id="btn" onclick="adicionar()">Adicionar</button>
+    
+    <ul id="lista"></ul>
+
+    <script>
+        const lista = document.getElementById("lista");
+        const campo = document.getElementById("campo");
+
+        function adicionar() {
+            let texto = campo.value;
+
+            if (texto !== "") {
+                const li = document.createElement("li");
+                li.textContent = texto;
+                lista.appendChild(li);
+
+                campo.value = "";
+            }
+        }
+    </script> -->
+
+    <p id="texto">Texto de exemplo</p>
+    <button onclick="destacar()">Destacar</button>
+
+    <script>
+        function destacar() {
+            const p = document.getElementById('texto');
+            p.classList.add('destaque');
+        }
+    </script>
+    <style>
+        .destaque {
+            background-color: yellow;
+            color: red;
+        }
+    </style>
+
+</body>
+</html>
