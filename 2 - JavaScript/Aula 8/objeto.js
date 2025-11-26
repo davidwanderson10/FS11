@@ -2873,6 +2873,28 @@ const jogadores = [
     }
 ]
 
+// {
+//         "id": "15",
+//         "nome": "TIAGO",
+//         "pontos": 409,
+//         "cotas": 33,
+//         "jogos": 132,
+//         "vitorias": 60,
+//         "empates": 33,
+//         "derrotas": 39,
+//         "gols_pro": 210,
+//         "gols_contra": 164,
+//         "saldo": 46,
+//         "primeiro": 10,
+//         "segundo": 11,
+//         "terceiro": 6,
+//         "quarto": 6,
+//         "gols": 34,
+//         "ass": 25,
+//         "amarelo": 1,
+//         "vermelho": 0
+//     }
+
 
 // for (let i = 0; i < jogadores.length; i++) {
 //     console.log(`Jogador: ${jogadores[i].nome}, GOLS: ${jogadores[i].gols}`);
@@ -3172,7 +3194,7 @@ const estado = {
                 
 // console.log(estado.regiao.nome)
 
-console.log(estado.regiao.ddd[1])
+// console.log(estado.regiao.ddd[1])
 
 
 // EXERCÍCIOS:
@@ -3187,7 +3209,19 @@ console.log(estado.regiao.ddd[1])
 
 // 5. Filtrar jogadores com mais de 30 gols e imprimir seus nomes e quantidade de gols
 
+for (let i = 0; i < jogadores.length; i++) {
+    if(jogadores[i].gols > 30) {
+        console.log(`${jogadores[i].nome}: ${jogadores[i].gols} Gols`)
+    }
+}
+
 // 6. Calcular a média de gols por jogador
+
+for (let i = 0; i < jogadores.length; i++) {
+    console.log(`${jogadores[i].nome}: ${jogadores[i].gols} Gols, Média: ${ (jogadores[i].gols / jogadores[i].cotas) }`)
+}
+
+
 
 // 7. Contar quantos jogadores têm mais de 20 assistências
 
@@ -3195,8 +3229,21 @@ console.log(estado.regiao.ddd[1])
 
 // 9. Filtrar os estados da região Nordeste e imprimir seus nomes
 
+// for (let i = 0; i < estados.length; i++) {
+//     if (estados[i].regiao.nome === "Nordeste" ) {
+//         console.log(estados[i].nome)
+//     }
+// }
+
 // 10. Contar quantos estados existem em cada região
 
 // 11. Filtrar os estados que possuem "Grande" no nome e imprimir seus nomes
+
+// for (let i = 0; i < estados.length; i++) {
+//     if (estados[i].nome.includes("Rio")) {
+//         console.log(estados[i].nome)
+//     }
+// }
+
 
 // 12. Listar as siglas dos estados da região Sul
