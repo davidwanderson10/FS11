@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>modo escuro</title>
+  <style>
+    body {
+      background: white;
+      color: black;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .dark {
+      background: black;
+      color: white;
+    }
+
+    .caixa {
+      width: 100px;
+      height: 100px;
+      background: red;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- <h1>minha página</h1>
+  <button id="botao">modo escuro</button>
+
+  <script>
+    const botao = document.getElementById("botao");
+    const body = document.body;
+
+    botao.onclick = () => {
+      if (body.classList.contains("dark")) {
+        body.classList.remove("dark");
+        botao.innerText = "modo escuro";
+      } else {
+        body.classList.add("dark");
+        botao.innerText = "modo claro";
+      }
+    };
+  </script> -->
+
+    <!-- <button style="background:green; color:white;" 
+      onclick="alert('MENSAGEM ENVIADA COM SUCESSO')">
+      ENVIAR
+    </button>
+
+    <button id="cancelar" style="background:red; color:white;">
+      CANCELAR
+    </button>
+
+    <script>
+      document.getElementById("cancelar")
+        .addEventListener("click", () => {
+          alert("MENSAGEM CANCELADA");
+        });
+    </script> -->
+
+    <!-- <div class="caixa" id="caixa"></div>
+    <div id="resultado"></div>
+
+    <script>
+      const caixa = document.getElementById("caixa");
+      const resultado = document.getElementById("resultado");
+
+      caixa.addEventListener("mouseover", () => {
+        caixa.style.background = "green";
+      });
+
+      caixa.addEventListener("mouseout", () => {
+        caixa.style.background = "red";
+      });
+
+      caixa.addEventListener("click", () => {
+        const dataHora = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
+        resultado.innerText = `Clicado em: ${dataHora}`;
+      });
+
+
+      
+    </script> -->
+
+    <!-- <ul id="lista">
+      <li>Item 1</li>
+      <li>Item 2</li>
+    </ul>
+    <script>
+      document.getElementById('lista').addEventListener('click', function(event) {
+        console.log(event.target);
+        if (event.target.tagName === 'LI') {
+          alert('Clicou em: ' + event.target.textContent);
+        }
+      });
+    </script> -->
+
+    <button id="btn">Adicionar itens</button>
+    <ul id="lista">
+      <li>Item inicial</li>
+    </ul>
+
+    <script>
+      const ul = document.getElementById('lista');
+      const btnAdicionar = document.getElementById('btn');
+      let contador = 2;
+
+      ul.addEventListener('click', function(event) {
+        if (event.target.tagName === 'LI') {
+          alert('Clicou em: ' + event.target.textContent);
+        }
+      });
+
+      btnAdicionar.addEventListener('click', function() {
+        const li = document.createElement('li');
+        li.textContent = 'Item ' + contador++;
+        ul.appendChild(li);
+      });
+
+
+    </script>
+
+
+
+
+</body>
+</html>
