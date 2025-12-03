@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Usuários</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform .2s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Usuários Aleatórios</h1>
+
+    <div class="container" id="users"></div>
+
+    <script>
+        const data = {
+            "results": [{
+                "gender": "male",
+                "name": {
+                    "title": "Mr",
+                    "first": "Kurilo",
+                    "last": "Dobryanska"
+                },
+                "location": {
+                    "street": {
+                        "number": 6259,
+                        "name": "Zhemchuzhnikova"
+                    },
+                    "city": "Podilsk",
+                    "state": "Sumska",
+                    "country": "Ukraine",
+                    "postcode": 86653,
+                    "coordinates": {
+                        "latitude": "79.8566",
+                        "longitude": "-134.1317"
+                    },
+                    "timezone": {
+                        "offset": "-8:00",
+                        "description": "Pacific Time (US & Canada)"
+                    }
+                },
+                "email": "kurilo.dobryanska@example.com",
+                "login": {
+                    "uuid": "742a5abd-feb9-4283-a067-d1589ce78c67",
+                    "username": "happyladybug850",
+                    "password": "1944",
+                    "salt": "85TLkFoQ",
+                    "md5": "84e375e32cb3548760f3d225e472eaa8",
+                    "sha1": "bae8703d974b1abd66a406acb7d62db515812903",
+                    "sha256": "77b4ae81c04d2f7c18d9aebc7e02f1f9ef29ef5880f569d8a4d13269509830fb"
+                },
+                "dob": {
+                    "date": "1950-03-22T20:51:59.878Z",
+                    "age": 75
+                },
+                "registered": {
+                    "date": "2008-07-22T14:06:10.553Z",
+                    "age": 17
+                },
+                "phone": "(096) T94-5734",
+                "cell": "(098) U78-6268",
+                "id": {
+                    "name": "",
+                    "value": null
+                },
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/men/50.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/men/50.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/men/50.jpg"
+                },
+                "nat": "UA"
+            },
+            {
+                "gender": "male",
+                "name": {
+                    "title": "Mr",
+                    "first": "Loïs",
+                    "last": "Brunet"
+                },
+                "location": {
+                    "street": {
+                        "number": 229,
+                        "name": "Rue Gasparin"
+                    },
+                    "city": "Argenteuil",
+                    "state": "Nièvre",
+                    "country": "France",
+                    "postcode": 85220,
+                    "coordinates": {
+                        "latitude": "62.6011",
+                        "longitude": "105.5171"
+                    },
+                    "timezone": {
+                        "offset": "+5:00",
+                        "description": "Ekaterinburg, Islamabad, Karachi, Tashkent"
+                    }
+                },
+                "email": "lois.brunet@example.com",
+                "login": {
+                    "uuid": "bca4ad67-81a0-4e0b-949a-98d5551742bc",
+                    "username": "bigkoala357",
+                    "password": "firefly",
+                    "salt": "qKQJHYut",
+                    "md5": "e89d3f0667444d94ee745aa5b902e7ea",
+                    "sha1": "3a507d1ed5085ec1493b434845ebf05d444b35ec",
+                    "sha256": "27bf4819a31c15331f486afecdcddfb79ea88c83a07c04b5f2e0b07d4c83fe5d"
+                },
+                "dob": {
+                    "date": "1952-02-27T18:38:03.182Z",
+                    "age": 73
+                },
+                "registered": {
+                    "date": "2016-06-06T05:50:27.002Z",
+                    "age": 9
+                },
+                "phone": "02-14-80-59-62",
+                "cell": "06-88-68-61-46",
+                "id": {
+                    "name": "INSEE",
+                    "value": "1520161112326 39"
+                },
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/men/80.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/men/80.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/men/80.jpg"
+                },
+                "nat": "FR"
+            },
+            {
+                "gender": "female",
+                "name": {
+                    "title": "Mrs",
+                    "first": "Janet",
+                    "last": "Vargas"
+                },
+                "location": {
+                    "street": {
+                        "number": 5905,
+                        "name": "Brick Kiln Road"
+                    },
+                    "city": "Coventry",
+                    "state": "County Down",
+                    "country": "United Kingdom",
+                    "postcode": "EK3Y 2DP",
+                    "coordinates": {
+                        "latitude": "-41.4290",
+                        "longitude": "-123.8569"
+                    },
+                    "timezone": {
+                        "offset": "-5:00",
+                        "description": "Eastern Time (US & Canada), Bogota, Lima"
+                    }
+                },
+                "email": "janet.vargas@example.com",
+                "login": {
+                    "uuid": "7e19eb3d-dbe9-427a-a212-364a7c7e5390",
+                    "username": "goldensnake981",
+                    "password": "donuts",
+                    "salt": "Yg5GakTW",
+                    "md5": "4705580ef6dfd50fedc7fe402a51022a",
+                    "sha1": "cd2b9e896650c4e7a93f4ab51c8490e9f21c6e17",
+                    "sha256": "4cf8e4c55d0d5f3733a31c1593efc3a133f0684881047d9802c51e921823992f"
+                },
+                "dob": {
+                    "date": "1989-01-18T15:27:13.863Z",
+                    "age": 36
+                },
+                "registered": {
+                    "date": "2002-09-30T08:32:00.414Z",
+                    "age": 23
+                },
+                "phone": "017687 44734",
+                "cell": "07962 149134",
+                "id": {
+                    "name": "NINO",
+                    "value": "CM 17 92 30 O"
+                },
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/women/57.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/women/57.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/women/57.jpg"
+                },
+                "nat": "GB"
+            },
+            {
+                "gender": "male",
+                "name": {
+                    "title": "Mr",
+                    "first": "Joe",
+                    "last": "Carr"
+                },
+                "location": {
+                    "street": {
+                        "number": 97,
+                        "name": "Highfield Road"
+                    },
+                    "city": "Portsmouth",
+                    "state": "Borders",
+                    "country": "United Kingdom",
+                    "postcode": "ZG50 4RT",
+                    "coordinates": {
+                        "latitude": "-46.2343",
+                        "longitude": "-108.2741"
+                    },
+                    "timezone": {
+                        "offset": "+8:00",
+                        "description": "Beijing, Perth, Singapore, Hong Kong"
+                    }
+                },
+                "email": "joe.carr@example.com",
+                "login": {
+                    "uuid": "cc1e802b-c45d-4fc0-95b9-9a3d357e2c10",
+                    "username": "blackmeercat310",
+                    "password": "jeter2",
+                    "salt": "cVFqL8UP",
+                    "md5": "f60376c3bfa79b7fce7d1e2cb15959c1",
+                    "sha1": "0c482eda4d9edc0f320556139265b8d2939c29ed",
+                    "sha256": "94fa37f17d1b76aabafb3c2deb16cdd2713273a1e26101fd6054d5c58eb8cb9c"
+                },
+                "dob": {
+                    "date": "1988-08-08T19:37:11.859Z",
+                    "age": 37
+                },
+                "registered": {
+                    "date": "2020-01-18T17:28:23.647Z",
+                    "age": 5
+                },
+                "phone": "017683 96222",
+                "cell": "07916 539182",
+                "id": {
+                    "name": "NINO",
+                    "value": "GK 27 84 32 R"
+                },
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/men/58.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/men/58.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/men/58.jpg"
+                },
+                "nat": "GB"
+            },
+            {
+                "gender": "female",
+                "name": {
+                    "title": "Miss",
+                    "first": "Mira",
+                    "last": "Sekulić"
+                },
+                "location": {
+                    "street": {
+                        "number": 4654,
+                        "name": "Ivana Jagodića"
+                    },
+                    "city": "Nova Varoš",
+                    "state": "Zaječar",
+                    "country": "Serbia",
+                    "postcode": 40251,
+                    "coordinates": {
+                        "latitude": "-86.2789",
+                        "longitude": "102.0544"
+                    },
+                    "timezone": {
+                        "offset": "+4:30",
+                        "description": "Kabul"
+                    }
+                },
+                "email": "mira.sekulic@example.com",
+                "login": {
+                    "uuid": "ea23c3ef-1078-4162-96e3-a3c9da866eae",
+                    "username": "happyfrog833",
+                    "password": "orange1",
+                    "salt": "jyNuXwVp",
+                    "md5": "a8ba56707078230f8e4d8b0ef414070f",
+                    "sha1": "331cb7fed1258b4e5df5ee608045a8560fe491e9",
+                    "sha256": "200c3b644b9b514cdb640567f98b36a55c98e037431a9d4972cc1f2390ab3bc5"
+                },
+                "dob": {
+                    "date": "1958-05-07T11:08:43.985Z",
+                    "age": 67
+                },
+                "registered": {
+                    "date": "2010-05-31T00:03:29.683Z",
+                    "age": 15
+                },
+                "phone": "037-0304-600",
+                "cell": "068-5639-375",
+                "id": {
+                    "name": "SID",
+                    "value": "659082988"
+                },
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/women/73.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/women/73.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/women/73.jpg"
+                },
+                "nat": "RS"
+            },
+            {
+                "gender": "female",
+                "name": {
+                    "title": "Miss",
+                    "first": "Delphine",
+                    "last": "Roy"
+                },
+                "location": {
+                    "street": {
+                        "number": 3816,
+                        "name": "9th St"
+                    },
+                    "city": "Chelsea",
+                    "state": "Saskatchewan",
+                    "country": "Canada",
+                    "postcode": "A3U 1K8",
+                    "coordinates": {
+                        "latitude": "-36.7105",
+                        "longitude": "-15.4691"
+                    },
+                    "timezone": {
+                        "offset": "-2:00",
+                        "description": "Mid-Atlantic"
+                    }
+                },
+                "email": "delphine.roy@example.com",
+                "login": {
+                    "uuid": "a3c385ae-f58d-49d0-9834-f95dc6f12015",
+                    "username": "orangepanda235",
+                    "password": "firefigh",
+                    "salt": "qbDHILBR",
+                    "md5": "51d0415a4cf8936f321a8580902f01e5",
+                    "sha1": "f228796656da36e50a4c8b80d9ceb343d2318c80",
+                    "sha256": "8557a665d33a4e093a19173098b8dbc679af44b6de0f1d7e8db43c842d6e51c1"
+                },
+                "dob": {
+                    "date": "1953-05-16T14:58:54.952Z",
+                    "age": 72
+                },
+                "registered": {
+                    "date": "2004-06-12T21:00:00.912Z",
+                    "age": 21
+                },
+                "phone": "I41 G50-9191",
+                "cell": "J13 Q56-1875",
+                "id": {
+                    "name": "SIN",
+                    "value": "846063295"
+                },
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/women/37.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/women/37.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/women/37.jpg"
+                },
+                "nat": "CA"
+            },
+            {
+                "gender": "female",
+                "name": {
+                    "title": "Mademoiselle",
+                    "first": "Daniela",
+                    "last": "Gautier"
+                },
+                "location": {
+                    "street": {
+                        "number": 5120,
+                        "name": "Avenue de la République"
+                    },
+                    "city": "Rain",
+                    "state": "Appenzell Innerrhoden",
+                    "country": "Switzerland",
+                    "postcode": 7554,
+                    "coordinates": {
+                        "latitude": "25.4720",
+                        "longitude": "-117.9622"
+                    },
+                    "timezone": {
+                        "offset": "+3:30",
+                        "description": "Tehran"
+                    }
+                },
+                "email": "daniela.gautier@example.com",
+                "login": {
+                    "uuid": "63c866e7-7c57-4200-9812-7bee80cde932",
+                    "username": "orangefish615",
+                    "password": "789456",
+                    "salt": "D8oFXS37",
+                    "md5": "56e508d79cb73a2d08426c8385664ffb",
+                    "sha1": "2c05533f6eb09ac4ea3b36906941f652ffb54dec",
+                    "sha256": "e57d6111387c890e9a0ea575fa4af7e05d5d733b0e1b78bfed83f1ec6480bfd7"
+                },
+                "dob": {
+                    "date": "1960-05-11T11:35:57.315Z",
+                    "age": 65
+                },
+                "registered": {
+                    "date": "2011-03-04T17:44:43.651Z",
+                    "age": 14
+                },
+                "phone": "076 370 15 84",
+                "cell": "076 576 04 46",
+                "id": {
+                    "name": "AVS",
+                    "value": "756.3395.0446.72"
+                },
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/women/19.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/women/19.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/women/19.jpg"
+                },
+                "nat": "CH"
+            },
+            {
+                "gender": "female",
+                "name": {
+                    "title": "Miss",
+                    "first": "Loeki",
+                    "last": "Van Dalfsen"
+                },
+                "location": {
+                    "street": {
+                        "number": 8840,
+                        "name": "Eikenlaantje"
+                    },
+                    "city": "Tiel",
+                    "state": "Drenthe",
+                    "country": "Netherlands",
+                    "postcode": "2078 KD",
+                    "coordinates": {
+                        "latitude": "-14.6840",
+                        "longitude": "168.0632"
+                    },
+                    "timezone": {
+                        "offset": "+4:30",
+                        "description": "Kabul"
+                    }
+                },
+                "email": "loeki.vandalfsen@example.com",
+                "login": {
+                    "uuid": "256e7c23-afd3-4143-9322-8b08df2b266f",
+                    "username": "browngoose618",
+                    "password": "annmarie",
+                    "salt": "Yw0lTs0Y",
+                    "md5": "d870a903cff9e1a4ea8eca7047506727",
+                    "sha1": "d3bbc77a34d59744ba177bbb952b2ea4fe221d89",
+                    "sha256": "a5afeb7205d8d2127d704c8ed70d5dad85fb548aa9546636dcd3e8ea86474d54"
+                },
+                "dob": {
+                    "date": "1977-10-03T06:13:53.156Z",
+                    "age": 48
+                },
+                "registered": {
+                    "date": "2021-08-21T13:51:07.061Z",
+                    "age": 4
+                },
+                "phone": "(086) 0132409",
+                "cell": "(06) 35623806",
+                "id": {
+                    "name": "BSN",
+                    "value": "79246756"
+                },
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/women/86.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/women/86.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/women/86.jpg"
+                },
+                "nat": "NL"
+            },
+            {
+                "gender": "female",
+                "name": {
+                    "title": "Madame",
+                    "first": "Flavia",
+                    "last": "Michel"
+                },
+                "location": {
+                    "street": {
+                        "number": 7488,
+                        "name": "Montée du Chemin-Neuf"
+                    },
+                    "city": "Radelfingen",
+                    "state": "Zug",
+                    "country": "Switzerland",
+                    "postcode": 6210,
+                    "coordinates": {
+                        "latitude": "-49.1688",
+                        "longitude": "-141.6985"
+                    },
+                    "timezone": {
+                        "offset": "0:00",
+                        "description": "Western Europe Time, London, Lisbon, Casablanca"
+                    }
+                },
+                "email": "flavia.michel@example.com",
+                "login": {
+                    "uuid": "815936ed-282b-4e45-8865-81d04a070c84",
+                    "username": "heavycat678",
+                    "password": "molly",
+                    "salt": "ewXngov5",
+                    "md5": "bffe27e678fdfc4f165eb8af727a38fa",
+                    "sha1": "15b840bd104344c0f4e2bc99102e1c6ce7e3cf54",
+                    "sha256": "d196e1e83516be47f5d5d71a41d517a553d5de3a319b775ea9644949cb3ea589"
+                },
+                "dob": {
+                    "date": "1950-01-01T15:11:20.899Z",
+                    "age": 75
+                },
+                "registered": {
+                    "date": "2010-08-15T14:59:26.738Z",
+                    "age": 15
+                },
+                "phone": "078 834 95 82",
+                "cell": "076 720 91 29",
+                "id": {
+                    "name": "AVS",
+                    "value": "756.2640.5523.41"
+                },
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/women/67.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/women/67.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/women/67.jpg"
+                },
+                "nat": "CH"
+            },
+            {
+                "gender": "male",
+                "name": {
+                    "title": "Mr",
+                    "first": "Gunbir",
+                    "last": "Uchil"
+                },
+                "location": {
+                    "street": {
+                        "number": 5766,
+                        "name": "Kazimar St"
+                    },
+                    "city": "Muzaffarnagar",
+                    "state": "Bihar",
+                    "country": "India",
+                    "postcode": 47609,
+                    "coordinates": {
+                        "latitude": "17.5027",
+                        "longitude": "166.8448"
+                    },
+                    "timezone": {
+                        "offset": "+5:45",
+                        "description": "Kathmandu"
+                    }
+                },
+                "email": "gunbir.uchil@example.com",
+                "login": {
+                    "uuid": "ba7293ce-9482-4f18-813a-d2b7ceffcdaa",
+                    "username": "redfrog143",
+                    "password": "cong",
+                    "salt": "9cz6OJmP",
+                    "md5": "48ad36c255b466fc113d8834ff2fd52d",
+                    "sha1": "b052abec7951f9370b0f9dc11320f5948d5c1e50",
+                    "sha256": "68ae3cbd87978757860b29a343540866a1e4a117a769acda3f5a5586ed1650b8"
+                },
+                "dob": {
+                    "date": "1948-08-09T23:50:22.396Z",
+                    "age": 77
+                },
+                "registered": {
+                    "date": "2008-03-03T07:07:02.918Z",
+                    "age": 17
+                },
+                "phone": "8064850080",
+                "cell": "8555803733",
+                "id": {
+                    "name": "UIDAI",
+                    "value": "150124393230"
+                },
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/men/94.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/men/94.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/men/94.jpg"
+                },
+                "nat": "IN"
+            }]
+        };
+
+        const users = data.results;
+        const container = document.getElementById("users");
+
+        // Montar os cards
+        users.forEach((user, i) => {
+
+            const card = document.createElement("div"); // <div></div>
+            card.classList.add("card"); // <div class="card"></div>
+            card.dataset.index = i; // armazena o índice do usuário  
+            // <div class="card" data-index="0"></div>
+
+            card.innerHTML = `
+        <img src="${user.picture.large}" alt="Foto">
+        <h3>${user.name.first} ${user.name.last}</h3>
+        <p>Nacionalidade: <strong>${user.nat}</strong></p>
+      `;
+
+            container.appendChild(card);
+        })
+
+        // Delegação de eventos para detectar clique em qualquer card
+        container.addEventListener("click", function (event) {
+            const card = event.target.closest(".card");
+            if (!card) return;
+
+            const index = card.dataset.index;
+            const user = users[index];
+
+            alert("Você clicou em: " + user.name.first + " " + user.name.last);
+        });
+    </script>
+
+</body>
+
+</html>
