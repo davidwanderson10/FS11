@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform .2s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .card p {
+            margin: 3px 0;
+            font-size: 14px;
+        }
+
+        .preco {
+            font-weight: bold;
+            color: #28a745;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .categorias {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color .2s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Produtos da Loja</h1>
+
+    <div class="categorias" id="categorias"></div>
+    <div class="container" id="produtos"></div>
+
+    <script>
+        const container = document.getElementById("produtos");
+        const containerCategorias = document.getElementById("categorias");
+        let produtos = [];
+        let categorias = [];
+
+        window.addEventListener("load", async () => {
+            try {
+                const url = "https://fakestoreapi.com/products";
+                const resposta = await fetch(url);
+                produtos = await resposta.json(); 
+                
+                produtos.forEach((produto) => {
+                    if(!categorias.includes(produto.category)) {
+                        categorias.push(produto.category)
+                    }
+                })
+
+                criarBotoes();
+                montarCards();
+            } catch (erro) {
+                console.error("Erro ao buscar produtos:", erro);
+            }
+        });
+
+        function criarBotoes() {
+            //Monta os botões de categorias
+            categorias.forEach((categoria) => {
+                const botao = document.createElement("button");
+                botao.classList.add("btn");// <button class="btn"></button>
+                botao.textContent = categoria;
+                
+                containerCategorias.appendChild(botao);
+            });
+        }
+
+        function montarCards() {
+            container.innerHTML = "";
+            //Monta os cards de produtos
+            produtos.forEach((produto, indice) => {
+                const card = document.createElement("div");
+                card.classList.add("card");// <div class="card"></div>
+                card.dataset.indice = indice;// armazena o índice do produto
+                // <div class="card" data-indice="0"></div>  
+
+                card.innerHTML = `
+                    <img src="${produto.image}" alt="${produto.title}">
+                    <h3>${produto.title}</h3>
+                    <p>Categoria: <strong>${produto.category}</strong></p>
+                    <p class="preco">R$ ${produto.price.toFixed(2)}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+     // Delegação de eventos para detectar clique em qualquer card
+
+        container.addEventListener("click", function (evento) {
+            const card = evento.target.closest(".card");
+            if (!card) return;
+
+            const indice = card.dataset.indice;
+            const produto = produtos[indice];
+
+            alert("Você clicou em: " + produto.title + "\nPreço: R$ " + produto.price);
+        });
+
+        containerCategorias.addEventListener("click", function (evento) {
+            const btn = evento.target.closest(".btn");
+            if (!btn) return;
+
+            const categoriaSelecionada = btn.textContent;
+        });
+    </script>
+
+</body>
+</html>

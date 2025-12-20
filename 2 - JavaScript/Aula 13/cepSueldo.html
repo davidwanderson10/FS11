@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar CEP</title>
+</head>
+<body>
+
+    <h2>Buscar CEP</h2>
+
+    <input id="cep" type="text" placeholder="Digite o CEP">
+    <button onclick="buscarCep()">Buscar</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        async function buscarCep() {
+            const cep = document.getElementById("cep").value;
+            const resultado = document.getElementById("resultado");
+
+            try {
+                const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                const dados = await resposta.json();
+
+                if (dados.erro) {
+                    resultado.innerHTML = "CEP não encontrado!";
+                    return;
+                }
+
+                resultado.innerHTML = `
+                    CEP: ${dados.cep}<br>
+                    Rua: ${dados.logradouro}<br>
+                    Bairro: ${dados.bairro}<br>
+                    Cidade: ${dados.localidade}<br>
+                    Estado: ${dados.uf}
+                `;
+            } catch (erro) {
+                resultado.innerHTML = "Erro ao buscar CEP!";
+            }
+        }
+    </script>
+
+</body>
+</html>

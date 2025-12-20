@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 12 - Pesquisa CEP</title>
+</head>
+<body>
+    <input type="text" id="cepInput" placeholder="Digite o CEP" maxlength="9">
+    <button onclick="pesquisarCep()">Pesquisar CEP</button>
+    <div id="resultado"></div>
+
+    <script>
+        
+        const cep = async (codigo) => {
+            try {
+                const resposta = await fetch(`https://viacep.com.br/ws/${codigo}/json/`)
+                const dados = await resposta.json()
+                console.log(dados)
+                return dados
+            } catch (erro) {
+                console.log(erro)
+                return null
+            }
+        }
+
+        const pesquisarCep = async () => {
+            const codigo = document.getElementById('cepInput').value.replace(/\D/g, '')
+            const resultado = document.getElementById('resultado')
+            
+            if (codigo.length !== 8) {
+                resultado.innerHTML = '<p style="color: red;">CEP deve ter 8 dígitos!</p>'
+                return
+            }
+            
+            resultado.innerHTML = '<p>Buscando CEP ' + codigo + '...</p>'
+            
+            const dados = await cep(codigo)
+            
+            if (!dados || dados.erro) {
+                resultado.innerHTML = '<p style="color: red;">CEP não encontrado!</p>'
+            } else {
+                resultado.innerHTML = `
+                    <p><strong>CEP:</strong> ${dados.cep}</p>
+                    <p><strong>Logradouro:</strong> ${dados.logradouro}</p>
+                    <p><strong>Complemento:</strong> ${dados.complemento}</p>
+                    <p><strong>Bairro:</strong> ${dados.bairro}</p>
+                    <p><strong>Cidade:</strong> ${dados.localidade} </p>
+                    <p><strong>Estado:</strong> ${dados.estado} </p>
+                    <p><strong>UF:</strong> ${dados.uf} </p>
+                    <p><strong>Regiao:</strong> ${dados.regiao} </p>
+                    <p><strong>DDD:</strong> ${dados.ddd} </p>
+                    <p><strong>IBGE:</strong> ${dados.ibge} </p>
+                `
+            }
+        }
+    </script>
+</body>
+</html>

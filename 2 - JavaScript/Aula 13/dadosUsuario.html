@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<script>
+    // localStorage.setItem('nomeUsuario', 'Ivan Júnior');
+    // localStorage.setItem('emailUsuario', 'ivanjunior2004@homail.com');
+
+    const user = {
+        nome: "Ivan Júnior",
+        email: "ivanjunior2004@homail.com",
+        matricula: 1234
+    }
+
+    localStorage.setItem('usuario', JSON.stringify(user));
+
+    const dadosUser = localStorage.getItem('usuario');
+    // const email = localStorage.getItem('emailUsuario');
+     
+    alert(`Nome: ${JSON.parse(dadosUser)}`);
+
+
+</script>
+
+
+</body>
+</html>

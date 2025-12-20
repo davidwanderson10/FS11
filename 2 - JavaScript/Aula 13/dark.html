@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>modo escuro</title>
+  <style>
+    body {
+      background: white;
+      color: black;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .dark {
+      background: black;
+      color: white;
+    }
+
+    .caixa {
+      width: 100px;
+      height: 100px;
+      background: red;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>minha página</h1>
+  <button id="botao">modo escuro</button>
+
+   <script>
+    const botao = document.getElementById("botao");
+    const body = document.body;
+
+    
+    const temaSalvo = localStorage.getItem('tema') || 'claro';
+    if (temaSalvo === 'escuro') {
+      body.classList.add('dark');
+      botao.innerText = 'modo claro';
+    }
+
+    botao.onclick = () => {
+      const modoEscuro = body.classList.contains("dark");
+      
+      if (modoEscuro) {
+        body.classList.remove("dark");
+        botao.innerText = "modo escuro";
+        localStorage.setItem('tema', 'claro');
+      } else {
+        body.classList.add("dark");
+        botao.innerText = "modo claro";
+        localStorage.setItem('tema', 'escuro');
+      }
+    };
+  </script>
+
+</body>
+</html>
