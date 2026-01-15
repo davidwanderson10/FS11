@@ -1,0 +1,19 @@
+.btn {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px;
+}
+
+.btn-green {
+    background-color: #4CAF50;
+    color: black;
+}
+
+.btn-red {
+    background-color: #f44336;
+    color: black;
+}
