@@ -1,0 +1,65 @@
+.container {
+  background: var(--card-background);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  padding: 20px;
+  border-radius: 12px;
+  position: relative;
+  min-height: 120px;
+}
+
+.entradas {
+  background: linear-gradient(135deg, #d1fae5, #10b981);
+}
+
+.saidas {
+  background: linear-gradient(135deg, #fee2e2, #ef4444);
+}
+
+.saldo {
+  background: linear-gradient(135deg, #dbeafe, #3b82f6);
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 8px;
+}
+
+.cardValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000;
+}
+
+.cardIcon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 32px;
+  opacity: 0.2;
+}

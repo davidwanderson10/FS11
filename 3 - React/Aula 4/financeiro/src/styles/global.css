@@ -1,0 +1,44 @@
+body {
+  background: linear-gradient(120deg, #1a2233 60%, #232b3e 100%);
+  color: #fff;
+  font-family: 'Inter', Arial, sans-serif;
+  margin: 0;
+}
+
+h1, h2, h3 {
+  font-weight: bold;
+}
+
+.card {
+  background: #232b3e;
+  border-radius: 20px;
+  padding: 32px;
+  margin: 16px;
+  min-width: 320px;
+  box-shadow: 0 4px 24px #0002;
+}
+
+.button-add {
+  background: #3366ff;
+  color: #fff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  text-align: center;
+  border: none;
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  cursor: pointer;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-manutencao { background: orange; }
+.status-alugada { background: red; }

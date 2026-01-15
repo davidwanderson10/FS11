@@ -1,0 +1,93 @@
+.container {
+  background: var(--card-background);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.listaMovimentacoes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.movimentacao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  transition: transform 0.2s;
+}
+
+.movimentacao:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.movimentacaoInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.movimentacaoDescricao {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.movimentacaoData {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.movimentacaoValor {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.movimentacaoValor.receita {
+  color: #10b981;
+}
+
+.movimentacaoValor.despesa {
+  color: #ef4444;
+}
+
+.resumo {
+  border-top: 2px solid var(--border-color);
+  padding-top: 20px;
+}
+
+.resumoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.resumoLabel {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.resumoValor {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.resumoValor.saldo {
+  color: var(--primary-color);
+  font-size: 18px;
+}
