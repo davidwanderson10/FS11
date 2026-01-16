@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import './App.css'
 import Header from './components/Header/Header.jsx';
 import ResumoCards from './components/ResumoCards/ResumoCards.jsx';
+import style from './App.module.css';
+import FormMovimentacao from "./components/FormMovimentacao/FormMovimentacao.jsx";
 
 function App() {
 
@@ -11,22 +12,7 @@ function App() {
       return JSON.parse(salvas);
     }
 
-    return [
-      { id: 1, 
-        descricao: 'Salário', 
-        valor: 5000, 
-        data: '13/01/2026', 
-        categoria: 'Receita', 
-        tipo: 'Salário' 
-      },
-      { id: 2, 
-        descricao: 'Aluguel', 
-        valor: 1500, 
-        data: '15/01/2026', 
-        categoria: 'Despesa', 
-        tipo: 'Aluguel' 
-      }
-    ];
+    return [];
   });
 
   // Salvar no localStorage sempre que movimentacoes mudar
@@ -34,26 +20,58 @@ function App() {
     localStorage.setItem('movimentacoes', JSON.stringify(movimentacoes));
   }, [movimentacoes]);
 
+  const handleAdicionarMovimentacao = (novaMovimentacao) => {
+    setMovimentacoes(prev => [novaMovimentacao, ...prev]);
+  };
+
 
   const entradas = movimentacoes
-    .filter((mov) => mov.categoria === 'Receita')
-    .reduce((acc, mov) => acc + mov.valor, 0);
+    .filter((mov) => mov.categoria === 'Receita') // filtra apenas as receitas
+    .reduce((acc, mov) => acc + mov.valor, 0); // soma os valores das receitas
 
   const saidas = movimentacoes
-    .filter((mov) => mov.categoria === 'Despesa')
-    .reduce((acc, mov) => acc + mov.valor, 0);
+    .filter((mov) => mov.categoria === 'Despesa') // filtra apenas as despesas
+    .reduce((acc, mov) => acc + mov.valor, 0); // soma os valores das despesas
 
   const saldoTotal = entradas - saidas;
+
+  const handleClearAll = () => {
+    if (window.confirm('Tem certeza que deseja limpar todas as movimentações?')) {
+      setMovimentacoes([]);
+    }
+  }
   
   return (
-    <>
+    <div className={style.container}>
       <Header />
-      <ResumoCards 
-        entradas={entradas} 
-        saidas={saidas} 
-        saldoTotal={saldoTotal}
-      />
-    </>
+
+      <div className={style.controls}>
+        <button className={style.clearButton} onClick={handleClearAll}>Limpar tudo</button>
+        <span className={style.counter}>Total de movimentações: {movimentacoes.length}</span>
+      </div>
+
+      <div className={style.gridContainer}>
+        {/* Coluna da esquerda */}
+        <div className={style.leftColumn}>
+          <ResumoCards 
+            entradas={entradas} 
+            saidas={saidas} 
+            saldoTotal={saldoTotal}
+          />
+
+         
+        </div>
+        {/* Coluna da direita */}
+        <div className={style.rightColumn}>
+          <FormMovimentacao onAdicionarMovimentacao={handleAdicionarMovimentacao}/>
+          
+        </div>
+
+
+      </div>
+
+      
+    </div>
   );
 }
 
@@ -68,4 +86,4 @@ export default App
 //    import styles from './Header.module.css';
 // 5. CRIAR A FUNÇÃO DO COMPONENTE E EXPORTAR
 
-// componente: ResumoCards
+// componente: FormMovimentacao
