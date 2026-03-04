@@ -1,0 +1,245 @@
+/*create table produtos (
+	id serial primary key,
+	codigo integer not null unique,
+	nome varchar(100) not null,
+	descricao varchar(200) not null,
+	valor numeric(10,2), -- 10 é o total, 2 após a vírgula
+	estoque integer,
+	data_registro date not null,
+	imagem varchar(200)
+)*/
+
+/*insert into produtos 
+(codigo, nome, descricao, valor, estoque, data_registro, imagem) values
+(2081, 'Teclado Mecânico RGB', 'Teclado Mecânico Gamer RGB Switch Blue', 349.90, 45, '2026-01-18', 'localhost:3000/informatica/teclado-mecanico-rgb.png'),
+(2082, 'Mouse Gamer 16000 DPI', 'Mouse Gamer Óptico 16000 DPI com RGB', 199.90, 60, '2026-01-18', 'localhost:3000/informatica/mouse-gamer.png'),
+(2083, 'Headset Gamer Surround 7.1', 'Headset Gamer USB com Som Surround 7.1', 499.90, 38, '2026-01-19', 'localhost:3000/informatica/headset-gamer.png'),
+(2084, 'Notebook i5 16GB SSD 512GB', 'Notebook Intel Core i5, 16GB RAM, SSD 512GB', 4599.90, 15, '2026-01-20', 'localhost:3000/informatica/notebook-i5.png'),
+(2085, 'Cadeira Gamer Ergonômica', 'Cadeira Gamer Ergonômica com Ajuste de Altura', 1199.90, 22, '2026-01-21', 'localhost:3000/informatica/cadeira-gamer.png'),
+(2086, 'Webcam Full HD', 'Webcam Full HD 1080p com Microfone Embutido', 279.90, 50, '2026-01-21', 'localhost:3000/informatica/webcam-fullhd.png'),
+(2087, 'HD Externo 1TB USB 3.0', 'HD Externo Portátil 1TB USB 3.0', 399.90, 40, '2026-01-22', 'localhost:3000/informatica/hd-externo-1tb.png'),
+(2088, 'SSD NVMe 1TB', 'SSD NVMe M.2 1TB Alta Performance', 649.90, 35, '2026-01-22', 'localhost:3000/informatica/ssd-nvme-1tb.png'),
+(2089, 'Placa de Vídeo RTX 4060', 'Placa de Vídeo NVIDIA RTX 4060 8GB GDDR6', 2499.90, 12, '2026-01-23', 'localhost:3000/informatica/rtx-4060.png'),
+(2090, 'Fonte 650W 80 Plus Bronze', 'Fonte ATX 650W Certificação 80 Plus Bronze', 449.90, 30, '2026-01-23', 'localhost:3000/informatica/fonte-650w.png')*/
+
+
+select * from produtos; -- selecionar todos os registros da tabela
+
+select codigo, nome, data_registro
+from produtos; -- selecionando apenas algumas colunas
+
+select codigo, nome, valor as preco, estoque
+from produtos; -- utilizando alias para nome das colunas
+
+select codigo, nome, valor, estoque, valor * estoque as total
+from produtos; -- colunas calculadas
+
+-- FAÇA UM SELECT QUE RETORNE O CODIGO, NOME, VALOR E VALOR COM DESCONTO DE 10%
+
+select codigo, nome, valor, valor * 0.9 as desconto 
+from produtos; -- retornando valor com 10% de desconto
+
+select * from produtos
+where codigo > 2085
+; -- utilizando filtros no where
+
+select * from produtos
+where codigo > 2085
+and data_registro = '2026-01-22'
+and id > 2
+;
+-- utilizando combinações and e or 
+
+select id, codigo, nome, valor from produtos
+where valor > 2000 
+	and valor < 10000 
+	and estoque > 3 ; -- utilizando combinações and e or 
+	
+select * from produtos
+where valor between 2000 and 10000
+and estoque > 3; -- between para filtrar valor entre mínimo e máximo
+
+select * from produtos
+where nome like '%Mouse%'; -- like para pegar partes do texto
+
+alter table produtos 
+add column categoria varchar(50); -- alterar tabela (adicionando nova coluna)
+
+alter table produtos 
+alter column categoria type varchar(150); -- alterar tabela (modificando coluna)
+
+alter table produtos 
+drop column categoria; -- alterando tabela (excluir coluna)
+
+update produtos
+set estoque = estoque + 30
+where nome like '%Teclado%'; -- update atualizando estoque dos teclados
+
+delete from produtos
+where id = 10; -- deletando dados da tabela
+
+create table enderecos (
+	id serial primary key,
+	aluno_id integer not null,
+	cep char(8), 
+	logradouro varchar(200) not null,
+	numero varchar(20) not null,
+	complemento varchar(100),
+	bairro varchar(100) not null,
+	cidade varchar(100) not null,
+	estado char(2),
+	created_at timestamp not null default now()
+);
+
+alter table enderecos 
+add constraint fk_enderecos_alunos -- criando a restrição enderecos_alunos
+foreign key (aluno_id) -- criando a foreign key
+references alunos(id) -- fazendo referência a coluna id da tabela alunos
+on delete cascade; -- deletar em cascata
+
+INSERT INTO public.enderecos
+(aluno_id, cep, logradouro, numero, complemento, bairro, cidade, estado)
+VALUES( 1, '60472000', 'AV. São João', '300', '', 'Aeroporto', 'Juazeiro do Norte', 'CE');
+;
+
+INSERT INTO enderecos
+(aluno_id, cep, logradouro, numero, complemento, bairro, cidade, estado)
+VALUES
+(1, '63021250', 'Av. Joaquim Ferreira de Melo', '49', 'Loteamento Conviver Life', 'Aeroporto', 'Juazeiro do Norte', 'CE'),
+(1, '63021260', 'Rua Padre Cícero', '120', 'Bloco A', 'Centro', 'Juazeiro do Norte', 'CE'),
+(1, '63021270', 'Rua São José', '305', 'Casa 2', 'Salesianos', 'Juazeiro do Norte', 'CE'),
+(1, '63021280', 'Av. Castelo Branco', '890', 'Ap 101', 'Triângulo', 'Juazeiro do Norte', 'CE'),
+(10, '63022110', 'Rua São Miguel', '63', 'Casa 3', 'Centro', 'Juazeiro do Norte', 'CE'),
+(10, '63022120', 'Rua Santana', '315', 'Bloco E', 'Salesianos', 'Juazeiro do Norte', 'CE'),
+(10, '63022130', 'Rua do Contorno', '742', 'Ap 601', 'Aeroporto', 'Juazeiro do Norte', 'CE'),
+(10, '63022140', 'Av. Ailton Gomes', '1500', 'Sala 12', 'Lagoa Seca', 'Juazeiro do Norte', 'CE');
+
+
+SELECT a.nome, a.email, e.logradouro, e.numero, e.bairro
+FROM alunos a 
+LEFT JOIN enderecos e -- juntando a segunda tabela
+ON a.id = e.aluno_id -- relação/condição para juntar (join)
+order by a.id; -- ordenando pelo id (usar desc para ordenar na descrescente)
+
+SELECT a.nome, a.email, e.logradouro, e.numero, e.bairro, e.cidade
+FROM alunos a 
+RIGHT JOIN enderecos e -- juntando a segunda tabela
+ON a.id = e.aluno_id -- relação/condição para juntar (join)
+order by a.id; -- ordenando pelo id (usar desc para ordenar na descrescente)
+
+SELECT a.nome, a.email, e.logradouro, e.numero, e.bairro, e.cidade
+FROM alunos a 
+INNER JOIN enderecos e -- juntando a segunda tabela
+ON a.id = e.aluno_id -- relação/condição para juntar (join)
+order by a.id; -- ordenando pelo id (usar desc para ordenar na descrescente)
+
+SELECT a.nome, a.email, e.logradouro, e.numero, e.bairro, e.cidade
+FROM alunos a 
+FULL JOIN enderecos e -- juntando a segunda tabela
+ON a.id = e.aluno_id -- relação/condição para juntar (join)
+order by a.id; -- ordenando pelo id (usar desc para ordenar na descrescente)
+
+-- SISTEMA DE ALUGUEL DE LIVROS -- 
+-- TABELA: autores (id, nome)
+-- TABELA: categorias (id, nome)
+-- TABELA: livros (id, titulo, descricao, autor_id, categoria_id, preco, img, idioma, num_paginas, editora, estoque, data_publicacao)
+-- TABELA: alunos (id, nome, matricula, curso, cpf, data_nasc, email, senha, status)
+-- TABELA: pedidos (id, livro_id, aluno_id, data_inicio, data_prevista, data_entrega, status)
+-- fonte de pesquisa: Amazon
+
+select count(*) from enderecos -- Contando a quantidade de registros com count
+where cidade in ('Fortaleza', 'Juazeiro do Norte');
+
+select cidade, count(*) from enderecos
+group by cidade; -- utilizando group by para agrupar por cidade
+
+select sum(valor) as valor from produtos; -- soma todos os valores dos registros
+
+select nome, sum(valor) as valor from produtos
+GROUP by nome; -- soma todos os valores dos registros agrupando por nome
+
+select round(avg(valor), 2) as valor from produtos; -- media dos valores dos registros
+
+select nome, avg(valor) as valor from produtos
+GROUP by nome; -- soma todos os valores dos registros agrupando por nome
+
+ALTER TABLE nome_da_tabela 
+DROP COLUMN nome_da_coluna --deletando uma coluna da tabela.
+
+
+create table autores (
+	id serial primary key,
+	nome varchar(200) not null 
+);
+
+create table categorias (
+	id serial primary key,
+	nome varchar(200) not null 
+);
+
+create table livros (
+	id serial primary key,
+	titulo varchar(200) not null,
+	descricao text,
+	edicao varchar(10),
+	autor_id int not null,
+	categoria_id int not null,
+	img varchar(300),
+	idioma varchar(100),
+	num_paginas int,
+	editora varchar(200),
+	estoque int,
+	data_publicacao date 
+);
+
+create table alunos (
+	id serial primary key,
+	nome varchar(200) not null,
+	matricula varchar(20),
+	curso varchar(100),
+	cpf char(11),
+	data_nascimento date,
+	email varchar(200),
+	senha varchar(100),
+	status varchar(20)
+);
+
+create table pedidos (
+	id serial primary key,
+	livro_id int not null,
+	aluno_id int not null,
+	data_inicio date,
+	data_prevista date ,
+	data_entrega date,
+	status varchar(20)
+);
+
+alter table livros 
+add constraint fk_livros_autores
+foreign key (autor_id) 
+references autores (id); 
+
+alter table livros 
+add constraint fk_livros_categorias
+foreign key (categoria_id) 
+references categorias (id) 
+; 
+
+alter table pedidos 
+add constraint fk_pedidos_alunos
+foreign key (aluno_id) 
+references alunos (id) 
+; 
+
+alter table pedidos 
+add constraint fk_pedidos_livros 
+foreign key (livro_id) 
+references livros (id);
+
+
+
+
+
+
+
+
