@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Biblioteca - Clientes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+    }
+
+    nav {
+      margin-top: 10px;
+    }
+    nav button {
+      margin-right: 8px;
+      padding: 6px 12px;
+      border: none;
+      background: #555;
+      color: #fff;
+      cursor: pointer;
+    }
+    nav button.active {
+      background: #007bff;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+    }
+    table th,
+    table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    table th {
+      background: #f2f2f2;
+    }
+
+    .actions svg {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* pop-up overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: #fff;
+      padding: 20px;
+      width: 300px;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .modal h3 {
+      margin-top: 0;
+    }
+    .modal input[type="text"] {
+      width: 100%;
+      padding: 6px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+    }
+    .modal button {
+      padding: 6px 12px;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Biblioteca</h1>
+    <nav>
+      <button id="tab-autores" class="active">Autores</button>
+      <button id="tab-categorias">Categorias</button>
+    </nav>
+  </header>
+  <main>
+    <!-- autores section -->
+    <section id="section-autores">
+      <button id="novo-autor">Novo autor</button>
+      <table id="table-autores">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- categorias section -->
+    <section id="section-categorias" class="hidden">
+      <button id="nova-categoria">Nova categoria</button>
+      <table id="table-categorias">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- overlay / modal for edit/create -->
+  <div id="overlay" class="overlay">
+    <div class="modal">
+      <h3 id="modal-title">Editar</h3>
+      <input type="text" id="modal-input" placeholder="Nome" />
+      <div>
+        <button id="modal-save">Salvar</button>
+        <button id="modal-cancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const apiBase = ''; // se o servidor estiver no mesmo host
+
+    // elementos comuns
+    const tabAutores = document.getElementById('tab-autores');
+    const tabCategorias = document.getElementById('tab-categorias');
+    const sectionAutores = document.getElementById('section-autores');
+    const sectionCategorias = document.getElementById('section-categorias');
+
+    const overlay = document.getElementById('overlay');
+    const modalTitle = document.getElementById('modal-title');
+    const modalInput = document.getElementById('modal-input');
+    const modalSave = document.getElementById('modal-save');
+    const modalCancel = document.getElementById('modal-cancel');
+
+    let currentMode = 'autores'; // ou 'categorias'
+    let editingId = null;
+
+    function switchTab(tab) {
+      currentMode = tab;
+      tabAutores.classList.toggle('active', tab === 'autores');
+      tabCategorias.classList.toggle('active', tab === 'categorias');
+      sectionAutores.classList.toggle('hidden', tab !== 'autores');
+      sectionCategorias.classList.toggle('hidden', tab !== 'categorias');
+      loadData();
+    }
+
+    tabAutores.addEventListener('click', () => switchTab('autores'));
+    tabCategorias.addEventListener('click', () => switchTab('categorias'));
+
+    function fetchJson(url, options) {
+      return fetch(apiBase + url, options).then(res => {
+        if (!res.ok) throw new Error('Erro na requisição');
+        if (res.status === 204) return null;
+        return res.json();
+      });
+    }
+
+    async function loadData() {
+      const list = await fetchJson('/' + currentMode);
+      const tbody = document.querySelector(`#table-${currentMode} tbody`);
+      tbody.innerHTML = '';
+      list.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.nome}</td>
+          <td class="actions">
+            <svg data-action="edit" data-id="${item.id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+            <svg data-action="delete" data-id="${item.id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14H7L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openModal(title, value = '', onSave) {
+      modalTitle.textContent = title;
+      modalInput.value = value;
+      overlay.classList.add('active');
+      modalInput.focus();
+      const cleanup = () => {
+        overlay.classList.remove('active');
+        modalSave.removeEventListener('click', onSave);
+      };
+      modalSave.addEventListener('click', () => {
+        onSave(modalInput.value);
+        cleanup();
+      });
+      modalCancel.addEventListener('click', () => {
+        cleanup();
+      });
+    }
+
+    async function createItem(nome) {
+      await fetchJson('/' + currentMode, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome }),
+      });
+      loadData();
+    }
+
+    async function updateItem(id, nome) {
+      await fetchJson(`/${currentMode}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome }),
+      });
+      loadData();
+    }
+
+    async function deleteItem(id) {
+      if (!confirm('Deseja realmente apagar?')) return;
+      await fetchJson(`/${currentMode}/${id}`, { method: 'DELETE' });
+      loadData();
+    }
+
+    document.body.addEventListener('click', e => {
+      const action = e.target.getAttribute('data-action');
+      const id = e.target.getAttribute('data-id');
+      if (!action) return;
+      if (action === 'edit') {
+        const tr = e.target.closest('tr');
+        const name = tr.querySelector('td:nth-child(2)').textContent;
+        openModal('Editar ' + currentMode.slice(0, -1), name, newName => {
+          updateItem(id, newName);
+        });
+      } else if (action === 'delete') {
+        deleteItem(id);
+      }
+    });
+
+    document.getElementById('novo-autor').addEventListener('click', () => {
+      openModal('Novo autor', '', name => {
+        createItem(name);
+      });
+    });
+    document.getElementById('nova-categoria').addEventListener('click', () => {
+      openModal('Nova categoria', '', name => {
+        createItem(name);
+      });
+    });
+
+    // inicial
+    loadData();
+  </script>
+</body>
+</html>

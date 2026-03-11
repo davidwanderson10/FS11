@@ -4,7 +4,7 @@ import autoresRoutes from './routes/autores.js';
 import categoriasRoutes from './routes/categorias.js';
 
 const app = express(); // Criando a aplicação Express
-
+app.use(express.static('public')); // Servindo arquivos estáticos da pasta "public"
 app.use(express.json()); // Middleware para parsear JSON
 
 // Configurando as rotas
