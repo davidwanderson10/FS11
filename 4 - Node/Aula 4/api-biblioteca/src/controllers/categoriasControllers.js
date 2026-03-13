@@ -1,23 +1,33 @@
-import express from 'express';
 import { PrismaClient } from '@prisma/client';
 
-const router = express.Router();
 const prisma = new PrismaClient();
 
-// GET /categorias
-router.get('/', async (req, res) => {
-  const categorias = await prisma.categorias.findMany();
-  res.json(categorias);
-});
+// lista todas as categorias
+export async function getAllCategorias(req, res) {
+  try {
+    const categorias = await prisma.categorias.findMany({orderBy: { nome: 'asc' }   });
+    res.json(categorias);
+  } catch (error) {
+    console.error('Erro ao buscar categorias:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+}
 
-// POST /categorias
-router.post('/', async (req, res) => {
+// cria uma nova categoria
+export async function createCategoria(req, res) {
   try {
     const { nome } = req.body;
 
-    // simples validação
     if (!nome || typeof nome !== 'string') {
       return res.status(400).json({ error: 'campo "nome" é obrigatório e deve ser string' });
+    }
+
+    const trimmed = nome.trim();
+    const existente = await prisma.categorias.findFirst({
+      where: { nome: { equals: trimmed, mode: 'insensitive' } },
+    });
+    if (existente) {
+      return res.status(409).json({ error: 'Já existe uma categoria com esse nome.' });
     }
 
     const novaCategoria = await prisma.categorias.create({
@@ -29,10 +39,10 @@ router.post('/', async (req, res) => {
     console.error('Erro ao criar categoria:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-});
+}
 
-// PUT /categorias/:id
-router.put('/:id', async (req, res) => {
+// atualiza uma categoria existente
+export async function updateCategoria(req, res) {
   try {
     const id = parseInt(req.params.id, 10);
     const { nome } = req.body;
@@ -59,10 +69,10 @@ router.put('/:id', async (req, res) => {
     console.error('Erro ao atualizar categoria:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-});
+}
 
-// DELETE /categorias/:id
-router.delete('/:id', async (req, res) => {
+// deleta uma categoria
+export async function deleteCategoria(req, res) {
   try {
     const id = parseInt(req.params.id, 10);
 
@@ -76,12 +86,9 @@ router.delete('/:id', async (req, res) => {
     }
 
     await prisma.categorias.delete({ where: { id } });
-    res.status(204).send();
+    res.status(200).json(categoriaExistente);
   } catch (error) {
     console.error('Erro ao deletar categoria:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-});
-
-
-export default router;
+}

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import autoresRoutes from './routes/autoresRoutes.js';
-import categoriasRoutes from './routes/categorias.js';
+import categoriasRoutes from './routes/categoriasRoutes.js';
 
 const app = express(); // Criando a aplicação Express
 app.use(express.static('public')); // Servindo arquivos estáticos da pasta "public"
