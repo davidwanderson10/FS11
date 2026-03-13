@@ -1,23 +1,33 @@
-import express from 'express';
 import { PrismaClient } from '@prisma/client';
 
-const router = express.Router();
 const prisma = new PrismaClient();
 
-// GET /autores
-router.get('/', async (req, res) => {
-  const autores = await prisma.autores.findMany();
-  res.json(autores);
-});
+// lista todos os autores
+export async function getAllAutores(req, res) {
+  try {
+    const autores = await prisma.autores.findMany({orderBy: { nome: 'asc' }   });
+    res.json(autores);
+  } catch (error) {
+    console.error('Erro ao buscar autores:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+}
 
-// POST /autores
-router.post('/', async (req, res) => {
+// cria um novo autor
+export async function createAutor(req, res) {
   try {
     const { nome } = req.body;
 
-    // simples validação
     if (!nome || typeof nome !== 'string') {
       return res.status(400).json({ error: 'campo "nome" é obrigatório e deve ser string' });
+    }
+
+    const trimmed = nome.trim();
+    const existente = await prisma.autores.findFirst({
+      where: { nome: { equals: trimmed, mode: 'insensitive' } },
+    });
+    if (existente) {
+      return res.status(409).json({ error: 'Já existe um autor com esse nome.' });
     }
 
     const novoAutor = await prisma.autores.create({
@@ -29,10 +39,10 @@ router.post('/', async (req, res) => {
     console.error('Erro ao criar autor:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-});
+}
 
-// PUT /autores/:id
-router.put('/:id', async (req, res) => {
+// atualiza um autor existente
+export async function updateAutor(req, res) {
   try {
     const id = parseInt(req.params.id, 10);
     const { nome } = req.body;
@@ -59,10 +69,10 @@ router.put('/:id', async (req, res) => {
     console.error('Erro ao atualizar autor:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-});
+}
 
-// DELETE /autores/:id
-router.delete('/:id', async (req, res) => {
+// deleta um autor
+export async function deleteAutor(req, res) {
   try {
     const id = parseInt(req.params.id, 10);
 
@@ -76,13 +86,12 @@ router.delete('/:id', async (req, res) => {
     }
 
     await prisma.autores.delete({ where: { id } });
-    res.status(204).send();
+    res.status(200).json(autorExistente);
   } catch (error) {
     console.error('Erro ao deletar autor:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-});
+}
 
 
-
-export default router;
+// FRONT -> CHAMA A ROTA NO APP -> QUE CHAMA O CONTROLLER -> QUE CHAMA O PRISMA -> QUE ACESSA O BANCO DE DADOS E RETORNA A RESPOSTA PARA O FRONT.

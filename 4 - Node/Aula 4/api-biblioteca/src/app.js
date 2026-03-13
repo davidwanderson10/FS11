@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import autoresRoutes from './routes/autores.js';
+import autoresRoutes from './routes/autoresRoutes.js';
 import categoriasRoutes from './routes/categorias.js';
 
 const app = express(); // Criando a aplicação Express
