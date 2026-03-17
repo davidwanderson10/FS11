@@ -59,17 +59,10 @@
       <h2>Livros</h2>
 
       <div class="row">
-        <form id="livro-form" class="form-inline">
-          <input id="livro-titulo" placeholder="Título do livro" maxlength="200" required aria-label="Título do livro">
-          <div class="counter"><span id="livro-counter">0</span>/200</div>
-          <select id="livro-autor" aria-label="Autor do livro">
-            <option value="">-- Autor --</option>
-          </select>
-          <select id="livro-categoria" aria-label="Categoria do livro">
-            <option value="">-- Categoria --</option>
-          </select>
-          <button type="submit">Criar</button>
-        </form>
+        <div style="display:flex;gap:8px;align-items:center;width:100%;">
+          <button id="novo-livro-btn" class="btn" type="button">Novo Livro</button>
+          <div style="flex:1"></div>
+        </div>
 
         <div class="search">
           <input id="livro-search" placeholder="Buscar livros..." aria-label="Buscar livros">
@@ -80,6 +73,43 @@
       <div id="livros-empty" class="empty hidden">Nenhum livro encontrado.</div>
     </section>
   </main>
+
+  <!-- Livro modal (usado para ADD e EDIT) -->
+  <div id="livro-modal" class="modal hidden" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content" role="document">
+      <div class="modal-header">
+        <h3 id="livro-modal-title">Novo Livro</h3>
+        <button id="livro-modal-close" class="btn icon close" aria-label="Fechar">×</button>
+      </div>
+      <form id="livro-modal-form" class="form-grid">
+        <input id="livro-titulo" placeholder="Título do livro" maxlength="200" required aria-label="Título do livro">
+        <div class="counter"><span id="livro-counter">0</span>/200</div>
+
+        <select id="livro-autor" aria-label="Autor do livro">
+          <option value="">-- Autor --</option>
+        </select>
+
+        <select id="livro-categoria" aria-label="Categoria do livro">
+          <option value="">-- Categoria --</option>
+        </select>
+
+        <input id="livro-edicao" placeholder="Edição" maxlength="10" aria-label="Edição do livro">
+        <input id="livro-img" placeholder="Nome do arquivo de imagem" maxlength="300" aria-label="Capa do livro">
+        <input id="livro-idioma" placeholder="Idioma" maxlength="100" aria-label="Idioma do livro">
+        <input id="livro-num_paginas" type="number" min="0" placeholder="Número de páginas" aria-label="Número de páginas">
+        <input id="livro-editora" placeholder="Editora" maxlength="200" aria-label="Editora">
+        <input id="livro-estoque" type="number" min="0" placeholder="Estoque" aria-label="Quantidade em estoque">
+        <input id="livro-data_publicacao" type="date" aria-label="Data de publicação">
+
+        <textarea id="livro-descricao" placeholder="Descrição (opcional)" rows="3" aria-label="Descrição do livro"></textarea>
+
+        <div style="grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+          <button type="button" id="livro-modal-cancel" class="btn cancel">Cancelar</button>
+          <button type="submit" id="livro-modal-save" class="btn save">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 

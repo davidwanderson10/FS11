@@ -16,12 +16,12 @@ nav button.active{background:#fff;color:#111;border-color:transparent}
 main{max-width:900px;margin:20px auto;padding:0 16px}
 .panel{background:var(--card);padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(15,23,42,0.06)}
 .hidden{display:none}
-.form-inline{display:flex;gap:8px;margin-bottom:12px}
-.form-inline input{flex:1;padding:10px;border-radius:6px;border:1px solid #e5e7eb}
-.form-inline button{padding:10px 14px;border-radius:6px;border:none;background:var(--accent);color:#fff;cursor:pointer}
+.form-inline{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.form-inline input, .form-inline select, .form-inline textarea{flex:1 1 160px;min-width:120px;padding:10px;border-radius:6px;border:1px solid #e5e7eb}
+.form-inline button, .form-grid button{flex:0 0 auto;padding:10px 14px;border-radius:6px;border:none;background:var(--accent);color:#fff;cursor:pointer}
 .list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
 .item{display:flex;align-items:center;justify-content:space-between;padding:10px;border-radius:6px;border:1px solid #eef2f7}
-.item .left{display:flex;align-items:center;gap:12px}
+.item .left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
 .item .name{font-weight:600}
 .item .muted{color:var(--muted);font-size:13px}
 .item .actions{display:flex;gap:8px}
@@ -30,14 +30,15 @@ main{max-width:900px;margin:20px auto;padding:0 16px}
 .btn.save{background:var(--accent);color:#fff}
 .btn.cancel{background:#9ca3af;color:#fff}
 .btn.delete{background:var(--danger);color:#fff}
-.inline-input{padding:6px 8px;border-radius:6px;border:1px solid #e5e7eb}
+.inline-input{padding:6px 8px;border-radius:6px;border:1px solid #e5e7eb;flex:1;min-width:0}
 .toast{position:fixed;right:16px;bottom:16px;padding:12px 16px;border-radius:8px;color:#fff;box-shadow:0 8px 24px rgba(15,23,42,0.12)}
 .toast.hidden{display:none}
 .toast.success{background:var(--success)}
 .toast.error{background:var(--danger)}
 
 /* Improved layout for forms + search */
-.row{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.row{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.row > .form-grid{flex:1;min-width:0}
 .search{width:260px}
 .search input{width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb}
 .counter{font-size:13px;color:var(--muted);margin-left:8px}
@@ -61,3 +62,7 @@ button:focus, input:focus{outline:3px solid rgba(37,99,235,0.18);outline-offset:
   .row{flex-direction:column;align-items:stretch}
   .form-inline input{width:100%}
 }
+
+/* Grid helper for more complex forms (used by livros) */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;align-items:center;margin-bottom:12px}
+.form-grid textarea{grid-column:1/-1;min-height:56px;padding:10px;border-radius:6px;border:1px solid #e5e7eb}

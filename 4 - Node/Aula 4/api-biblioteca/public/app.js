@@ -36,6 +36,16 @@ const autoresEmpty = document.getElementById('autores-empty');
 const categoriasEmpty = document.getElementById('categorias-empty');
 const livrosEmpty = document.getElementById('livros-empty');
 
+// New livro fields
+const livroEdicaoInput = document.getElementById('livro-edicao');
+const livroImgInput = document.getElementById('livro-img');
+const livroIdiomaInput = document.getElementById('livro-idioma');
+const livroNumPaginasInput = document.getElementById('livro-num_paginas');
+const livroEditoraInput = document.getElementById('livro-editora');
+const livroEstoqueInput = document.getElementById('livro-estoque');
+const livroDataPublicacaoInput = document.getElementById('livro-data_publicacao');
+const livroDescricaoInput = document.getElementById('livro-descricao');
+
 const confirmModal = document.getElementById('confirm-modal');
 const confirmMessage = document.getElementById('confirm-message');
 const confirmOk = document.getElementById('confirm-ok');
@@ -129,7 +139,7 @@ function createItemElement(item, resource) {
   editBtn.className = 'btn edit';
   editBtn.textContent = 'Editar';
   editBtn.addEventListener('click', () => {
-    if (resource === 'livros') startEditLivro(li, item);
+    if (resource === 'livros') openLivroModal('edit', item);
     else startEdit(li, item, resource);
   });
 
@@ -238,30 +248,119 @@ categoriaForm.addEventListener('submit', async (e) => {
   }
 });
 
-// Livro create
-if (livroForm) {
-  livroForm.addEventListener('submit', async (e) => {
+// Livro modal (ADD / EDIT)
+// Modal elements
+const novoLivroBtn = document.getElementById('novo-livro-btn');
+const livroModal = document.getElementById('livro-modal');
+const livroModalForm = document.getElementById('livro-modal-form');
+const livroModalTitle = document.getElementById('livro-modal-title');
+const livroModalCancel = document.getElementById('livro-modal-cancel');
+
+let editingLivroId = null;
+
+function formatDateForInput(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d)) return '';
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function openLivroModal(mode, item = null) {
+  editingLivroId = mode === 'edit' && item ? item.id : null;
+  livroModalTitle.textContent = mode === 'edit' ? 'Editar Livro' : 'Novo Livro';
+  // Populate fields or clear
+  livroTituloInput.value = item?.titulo || '';
+  livroCounter.textContent = String(livroTituloInput.value.length || 0);
+  livroEdicaoInput.value = item?.edicao || '';
+  livroImgInput.value = item?.img || '';
+  livroIdiomaInput.value = item?.idioma || '';
+  livroNumPaginasInput.value = item?.num_paginas ?? '';
+  livroEditoraInput.value = item?.editora || '';
+  livroEstoqueInput.value = item?.estoque ?? '';
+  livroDataPublicacaoInput.value = formatDateForInput(item?.data_publicacao);
+  livroDescricaoInput.value = item?.descricao || '';
+  // select values
+  livroAutorSelect.value = item?.autorId || '';
+  livroCategoriaSelect.value = item?.categoriaId || '';
+
+  livroModal.classList.remove('hidden');
+  livroModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeLivroModal() {
+  editingLivroId = null;
+  livroModal.classList.add('hidden');
+  livroModal.setAttribute('aria-hidden', 'true');
+}
+
+if (novoLivroBtn) novoLivroBtn.addEventListener('click', () => openLivroModal('create'));
+if (livroModalCancel) livroModalCancel.addEventListener('click', () => closeLivroModal());
+
+// close modal with Escape
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !livroModal.classList.contains('hidden')) closeLivroModal(); });
+
+// submit modal form (create or update)
+if (livroModalForm) {
+  livroModalForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const titulo = livroTituloInput.value.trim();
     const autorId = Number(livroAutorSelect.value) || undefined;
     const categoriaId = Number(livroCategoriaSelect.value) || undefined;
+    const edicao = livroEdicaoInput ? livroEdicaoInput.value.trim() : undefined;
+    const img = livroImgInput ? livroImgInput.value.trim() : undefined;
+    const idioma = livroIdiomaInput ? livroIdiomaInput.value.trim() : undefined;
+    const num_paginas = livroNumPaginasInput && livroNumPaginasInput.value !== '' ? Number(livroNumPaginasInput.value) : undefined;
+    const editora = livroEditoraInput ? livroEditoraInput.value.trim() : undefined;
+    const estoque = livroEstoqueInput && livroEstoqueInput.value !== '' ? Number(livroEstoqueInput.value) : undefined;
+    const data_publicacao = livroDataPublicacaoInput && livroDataPublicacaoInput.value ? livroDataPublicacaoInput.value : undefined;
+    const descricao = livroDescricaoInput ? livroDescricaoInput.value.trim() : undefined;
+
     if (!titulo) return showToast('Título é obrigatório', 'error');
     if (!autorId) return showToast('Autor é obrigatório', 'error');
     if (!categoriaId) return showToast('Categoria é obrigatória', 'error');
 
-    const res = await request(api.livros, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ titulo, autorId, categoriaId }),
-    });
+    const payload = {
+      titulo,
+      autorId,
+      categoriaId,
+      edicao: edicao || undefined,
+      img: img || undefined,
+      idioma: idioma || undefined,
+      num_paginas: num_paginas !== undefined ? num_paginas : undefined,
+      editora: editora || undefined,
+      estoque: estoque !== undefined ? estoque : undefined,
+      data_publicacao: data_publicacao || undefined,
+      descricao: descricao || undefined,
+    };
 
-    if (res.status === 201) {
-      showToast('Livro criado');
-      livroTituloInput.value = '';
-      livroCounter.textContent = '0';
-      await loadList('livros');
-    } else {
-      showToast((res.error && (res.error.error || (res.error.errors && res.error.errors.join(', ')))) || 'Erro ao criar livro', 'error');
+    try {
+      let res;
+      if (editingLivroId) {
+        res = await request(`${api.livros}/${editingLivroId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        res = await request(api.livros, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
+
+      if (res.status === 200 || res.status === 201) {
+        showToast(editingLivroId ? 'Livro atualizado' : 'Livro criado');
+        closeLivroModal();
+        await loadList('livros');
+      } else {
+        showToast((res.error && (res.error.error || (res.error.errors && res.error.errors.join(', ')))) || 'Erro ao salvar livro', 'error');
+      }
+    } catch (err) {
+      showToast('Erro de rede ao salvar', 'error');
     }
   });
 }
@@ -310,53 +409,6 @@ async function saveEdit(id, nome, resource, li) {
     await loadList(resource);
   } else {
     showToast((res.error && res.error.error) || (res.error && res.error.message) || 'Erro ao atualizar', 'error');
-  }
-}
-
-// Start edit for livros (only title editable inline)
-function startEditLivro(li, item) {
-  const left = li.querySelector('.left');
-  left.innerHTML = '';
-  const input = document.createElement('input');
-  input.className = 'inline-input';
-  input.value = item.titulo;
-  input.maxLength = 200;
-  left.appendChild(input);
-
-  const actions = li.querySelector('.actions');
-  actions.innerHTML = '';
-
-  const saveBtn = document.createElement('button');
-  saveBtn.className = 'btn save';
-  saveBtn.textContent = 'Salvar';
-  saveBtn.addEventListener('click', () => saveLivroEdit(item.id, input.value));
-
-  const cancelBtn = document.createElement('button');
-  cancelBtn.className = 'btn cancel';
-  cancelBtn.textContent = 'Cancelar';
-  cancelBtn.addEventListener('click', async () => { await loadList('livros'); });
-
-  actions.appendChild(saveBtn);
-  actions.appendChild(cancelBtn);
-  input.focus();
-}
-
-async function saveLivroEdit(id, titulo) {
-  const trimmed = titulo.trim();
-  if (!trimmed) return showToast('Título não pode ser vazio', 'error');
-  const res = await request(`${api.livros}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ titulo: trimmed }),
-  });
-  if (res.status === 200) {
-    showToast('Livro atualizado');
-    await loadList('livros');
-  } else if (res.status === 404) {
-    showToast('Livro não encontrado', 'error');
-    await loadList('livros');
-  } else {
-    showToast((res.error && res.error.error) || (res.error && res.error.message) || 'Erro ao atualizar livro', 'error');
   }
 }
 
