@@ -16,10 +16,33 @@ datasource db {
 model autores {
   id  Int @id @default(autoincrement())
   nome String @db.VarChar(200)
+
+  livros livros[]
 }
 
 model categorias {
   id  Int @id @default(autoincrement())
   nome String @db.VarChar(200)
+
+  livros livros[]
 }
 
+model livros {
+  id Int @id @default(autoincrement())
+  titulo String @db.VarChar(200)
+  descricao String? @db.Text
+  edicao String? @db.VarChar(10)
+  autorId Int @map("autor_id")
+  categoriaId Int @map("categoria_id")
+  img String? @db.VarChar(300)
+  idioma String? @db.VarChar(100)
+  num_paginas Int?
+  editora String? @db.VarChar(200)
+  estoque Int?
+  data_publicacao DateTime? @map("data_publicacao")
+
+  autores autores @relation(fields: [autorId], references: [id])
+  categorias categorias @relation(fields: [categoriaId], references: [id])
+
+  @@map("livros")
+}
