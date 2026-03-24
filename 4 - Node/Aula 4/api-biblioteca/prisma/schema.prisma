@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,35 +8,71 @@ datasource db {
 }
 
 model autores {
-  id  Int @id @default(autoincrement())
-  nome String @db.VarChar(200)
-
+  id     Int      @id @default(autoincrement())
+  nome   String   @db.VarChar(200)
   livros livros[]
 }
 
 model categorias {
-  id  Int @id @default(autoincrement())
-  nome String @db.VarChar(200)
-
+  id     Int      @id @default(autoincrement())
+  nome   String   @db.VarChar(200)
   livros livros[]
 }
 
 model livros {
-  id Int @id @default(autoincrement())
-  titulo String @db.VarChar(200)
-  descricao String? @db.Text
-  edicao String? @db.VarChar(10)
-  autorId Int @map("autor_id")
-  categoriaId Int @map("categoria_id")
-  img String? @db.VarChar(300)
-  idioma String? @db.VarChar(100)
-  num_paginas Int?
-  editora String? @db.VarChar(200)
-  estoque Int?
-  data_publicacao DateTime? @map("data_publicacao")
-
-  autores autores @relation(fields: [autorId], references: [id])
-  categorias categorias @relation(fields: [categoriaId], references: [id])
+  id              Int        @id @default(autoincrement())
+  titulo          String     @db.VarChar(200)
+  descricao       String?
+  edicao          String?    @db.VarChar(10)
+  autorId         Int        @map("autor_id")
+  categoriaId     Int        @map("categoria_id")
+  img             String?    @db.VarChar(300)
+  idioma          String?    @db.VarChar(100)
+  num_paginas     Int?
+  editora         String?    @db.VarChar(200)
+  estoque         Int?
+  data_publicacao DateTime?  @map("data_publicacao") @db.Date
+  autores         autores    @relation(fields: [autorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_livros_autores")
+  categorias      categorias @relation(fields: [categoriaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_livros_categorias")
+  pedidos         pedidos[]
 
   @@map("livros")
+}
+
+model alunos {
+  id              Int       @id @default(autoincrement())
+  nome            String    @db.VarChar(200)
+  matricula       String?   @db.VarChar(20)
+  curso           String?   @db.VarChar(100)
+  cpf             String?   @db.Char(11)
+  data_nascimento DateTime? @db.Date
+  email           String?   @db.VarChar(200)
+  senha           String?   @db.VarChar(100)
+  status          String?   @db.VarChar(20)
+  pedidos         pedidos[]
+}
+
+model usuarios {
+  id               Int      @id @default(autoincrement())
+  nome             String   @db.VarChar(200)
+  matricula        String?  @unique @db.VarChar(20)
+  perfil           String   @db.VarChar(20)
+  curso            String?  @db.VarChar(100)
+  cpf              String   @unique @db.Char(11)
+  data_nascimento  DateTime @db.Date
+  email            String   @unique @db.VarChar(200)
+  senha            String   @db.VarChar(100)
+  status           String   @db.VarChar(20)
+}
+
+model pedidos {
+  id            Int       @id @default(autoincrement())
+  livro_id      Int
+  aluno_id      Int
+  data_inicio   DateTime? @db.Date
+  data_prevista DateTime? @db.Date
+  data_entrega  DateTime? @db.Date
+  status        String?   @db.VarChar(20)
+  alunos        alunos    @relation(fields: [aluno_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedidos_alunos")
+  livros        livros    @relation(fields: [livro_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedidos_livros")
 }

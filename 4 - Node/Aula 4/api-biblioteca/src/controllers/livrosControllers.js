@@ -68,11 +68,11 @@ export async function createLivro(req, res) {
     edicao: req.body.edicao,
     autorId: req.body.autorId !== undefined ? Number(req.body.autorId) : undefined,
     categoriaId: req.body.categoriaId !== undefined ? Number(req.body.categoriaId) : undefined,
-    img: req.body.img,
+    img: req.file ? `/uploads/${req.file.filename}` : req.body.img,
     idioma: req.body.idioma,
-    num_paginas: req.body.num_paginas !== undefined ? Number(req.body.num_paginas) : undefined,
+    num_paginas: req.body.num_paginas !== undefined && req.body.num_paginas !== '' ? Number(req.body.num_paginas) : undefined,
     editora: req.body.editora,
-    estoque: req.body.estoque !== undefined ? Number(req.body.estoque) : undefined,
+    estoque: req.body.estoque !== undefined && req.body.estoque !== '' ? Number(req.body.estoque) : undefined,
     data_publicacao: req.body.data_publicacao,
   };
 
@@ -116,11 +116,11 @@ export async function updateLivro(req, res) {
     edicao: req.body.edicao,
     autorId: req.body.autorId !== undefined ? Number(req.body.autorId) : undefined,
     categoriaId: req.body.categoriaId !== undefined ? Number(req.body.categoriaId) : undefined,
-    img: req.body.img,
+    img: req.file ? `/uploads/${req.file.filename}` : req.body.img,
     idioma: req.body.idioma,
-    num_paginas: req.body.num_paginas !== undefined ? Number(req.body.num_paginas) : undefined,
+    num_paginas: req.body.num_paginas !== undefined && req.body.num_paginas !== '' ? Number(req.body.num_paginas) : undefined,
     editora: req.body.editora,
-    estoque: req.body.estoque !== undefined ? Number(req.body.estoque) : undefined,
+    estoque: req.body.estoque !== undefined && req.body.estoque !== '' ? Number(req.body.estoque) : undefined,
     data_publicacao: req.body.data_publicacao,
   };
 

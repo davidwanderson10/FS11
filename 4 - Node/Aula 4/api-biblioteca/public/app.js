@@ -15,25 +15,47 @@ const livrosSection = document.getElementById('livros-section');
 const autoresList = document.getElementById('autores-list');
 const categoriasList = document.getElementById('categorias-list');
 const livrosList = document.getElementById('livros-list');
-const autorForm = document.getElementById('autor-form');
-const categoriaForm = document.getElementById('categoria-form');
-const livroForm = document.getElementById('livro-form');
 const toastEl = document.getElementById('toast');
 
-// New UI elements (counters, search, modal, empty states)
-const autorInput = document.getElementById('autor-nome');
-const categoriaInput = document.getElementById('categoria-nome');
+// Autor UI
+const novoAutorBtn = document.getElementById('novo-autor-btn');
+const autorModal = document.getElementById('autor-modal');
+const autorModalForm = document.getElementById('autor-modal-form');
+const autorModalTitle = document.getElementById('autor-modal-title');
+const autorModalCancel = document.getElementById('autor-modal-cancel');
+const autorModalClose = document.getElementById('autor-modal-close');
+const autorInput = document.getElementById('autor-nome-modal');
+const autorCounter = document.getElementById('autor-counter');
+const autorSearch = document.getElementById('autor-search');
+const autoresEmpty = document.getElementById('autores-empty');
+
+const autorViewModal = document.getElementById('autor-view-modal');
+const autorViewContent = document.getElementById('autor-view-content');
+const autorViewClose = document.getElementById('autor-view-close');
+const autorViewOk = document.getElementById('autor-view-ok');
+
+// Categoria UI
+const novaCategoriaBtn = document.getElementById('nova-categoria-btn');
+const categoriaModal = document.getElementById('categoria-modal');
+const categoriaModalForm = document.getElementById('categoria-modal-form');
+const categoriaModalTitle = document.getElementById('categoria-modal-title');
+const categoriaModalCancel = document.getElementById('categoria-modal-cancel');
+const categoriaModalClose = document.getElementById('categoria-modal-close');
+const categoriaInput = document.getElementById('categoria-nome-modal');
+const categoriaCounter = document.getElementById('categoria-counter');
+const categoriaSearch = document.getElementById('categoria-search');
+const categoriasEmpty = document.getElementById('categorias-empty');
+
+const categoriaViewModal = document.getElementById('categoria-view-modal');
+const categoriaViewContent = document.getElementById('categoria-view-content');
+const categoriaViewClose = document.getElementById('categoria-view-close');
+const categoriaViewOk = document.getElementById('categoria-view-ok');
+
 const livroTituloInput = document.getElementById('livro-titulo');
 const livroAutorSelect = document.getElementById('livro-autor');
 const livroCategoriaSelect = document.getElementById('livro-categoria');
-const autorCounter = document.getElementById('autor-counter');
-const categoriaCounter = document.getElementById('categoria-counter');
 const livroCounter = document.getElementById('livro-counter');
-const autorSearch = document.getElementById('autor-search');
-const categoriaSearch = document.getElementById('categoria-search');
 const livroSearch = document.getElementById('livro-search');
-const autoresEmpty = document.getElementById('autores-empty');
-const categoriasEmpty = document.getElementById('categorias-empty');
 const livrosEmpty = document.getElementById('livros-empty');
 
 // New livro fields
@@ -140,13 +162,24 @@ function createItemElement(item, resource) {
   editBtn.textContent = 'Editar';
   editBtn.addEventListener('click', () => {
     if (resource === 'livros') openLivroModal('edit', item);
-    else startEdit(li, item, resource);
+    else if (resource === 'autores') openAutorModal('edit', item);
+    else if (resource === 'categorias') openCategoriaModal('edit', item);
   });
 
   const deleteBtn = document.createElement('button');
   deleteBtn.className = 'btn delete';
   deleteBtn.textContent = 'Apagar';
   deleteBtn.addEventListener('click', () => handleDelete(item.id, resource, li));
+
+  const viewBtn = document.createElement('button');
+  viewBtn.className = 'btn view';
+  viewBtn.textContent = 'Visualizar';
+  viewBtn.addEventListener('click', () => {
+    if (resource === 'livros') openLivroViewModal(item);
+    else if (resource === 'autores') openAutorViewModal(item);
+    else if (resource === 'categorias') openCategoriaViewModal(item);
+  });
+  actions.appendChild(viewBtn);
 
   actions.appendChild(editBtn);
   actions.appendChild(deleteBtn);
@@ -209,44 +242,169 @@ function populateLivroSelects() {
   livroCategoriaSelect.innerHTML = '<option value="">-- Categoria --</option>' + currentCategorias.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
 }
 
-// Create
-autorForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const nome = autorInput.value.trim();
-  if (!nome) return showToast('Nome é obrigatório', 'error');
-  const res = await request(api.autores, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nome }),
-  });
-  if (res.status === 201) {
-    showToast('Autor criado');
-    autorInput.value = '';
-    autorCounter.textContent = '0';
-    await loadList('autores');
-  } else {
-    showToast((res.error && res.error.error) || (res.error && res.error.message) || 'Erro ao criar autor', 'error');
-  }
-});
+// Modals state
+let editingAutorId = null;
+let editingCategoriaId = null;
 
-categoriaForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const nome = categoriaInput.value.trim();
-  if (!nome) return showToast('Nome é obrigatório', 'error');
-  const res = await request(api.categorias, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nome }),
+// =======================
+// AUTOR MODALS
+// =======================
+function openAutorModal(mode, item = null) {
+  editingAutorId = mode === 'edit' && item ? item.id : null;
+  autorModalTitle.textContent = mode === 'edit' ? 'Editar Autor' : 'Novo Autor';
+  autorInput.value = item?.nome || '';
+  autorCounter.textContent = String(autorInput.value.length || 0);
+  autorModal.classList.remove('hidden');
+  autorModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeAutorModal() {
+  editingAutorId = null;
+  autorModal.classList.add('hidden');
+  autorModal.setAttribute('aria-hidden', 'true');
+}
+
+function openAutorViewModal(item) {
+  let html = `
+    <div class="view-group full-width">
+      <span class="view-label">ID</span>
+      <span class="view-value">${item.id}</span>
+    </div>
+    <div class="view-group full-width">
+      <span class="view-label">Nome do Autor</span>
+      <span class="view-value" style="font-size:18px;font-weight:bold">${item.nome || '—'}</span>
+    </div>
+  `;
+  autorViewContent.innerHTML = html;
+  autorViewModal.classList.remove('hidden');
+  autorViewModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeAutorViewModal() {
+  autorViewModal.classList.add('hidden');
+  autorViewModal.setAttribute('aria-hidden', 'true');
+}
+
+if (novoAutorBtn) novoAutorBtn.addEventListener('click', () => openAutorModal('create'));
+if (autorModalCancel) autorModalCancel.addEventListener('click', () => closeAutorModal());
+if (autorModalClose) autorModalClose.addEventListener('click', () => closeAutorModal());
+if (autorViewClose) autorViewClose.addEventListener('click', () => closeAutorViewModal());
+if (autorViewOk) autorViewOk.addEventListener('click', () => closeAutorViewModal());
+
+if (autorModalForm) {
+  autorModalForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = autorInput.value.trim();
+    if (!nome) return showToast('Nome é obrigatório', 'error');
+
+    try {
+      let res;
+      if (editingAutorId) {
+        res = await request(`${api.autores}/${editingAutorId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome }),
+        });
+      } else {
+        res = await request(api.autores, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome }),
+        });
+      }
+
+      if (res.status === 200 || res.status === 201) {
+        showToast(editingAutorId ? 'Autor atualizado' : 'Autor criado');
+        closeAutorModal();
+        await loadList('autores');
+      } else {
+        showToast((res.error && res.error.error) || 'Erro ao salvar autor', 'error');
+      }
+    } catch (err) {
+      showToast('Erro de rede ao salvar', 'error');
+    }
   });
-  if (res.status === 201) {
-    showToast('Categoria criada');
-    categoriaInput.value = '';
-    categoriaCounter.textContent = '0';
-    await loadList('categorias');
-  } else {
-    showToast((res.error && res.error.error) || (res.error && res.error.message) || 'Erro ao criar categoria', 'error');
-  }
-});
+}
+
+// =======================
+// CATEGORIA MODALS
+// =======================
+function openCategoriaModal(mode, item = null) {
+  editingCategoriaId = mode === 'edit' && item ? item.id : null;
+  categoriaModalTitle.textContent = mode === 'edit' ? 'Editar Categoria' : 'Nova Categoria';
+  categoriaInput.value = item?.nome || '';
+  categoriaCounter.textContent = String(categoriaInput.value.length || 0);
+  categoriaModal.classList.remove('hidden');
+  categoriaModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeCategoriaModal() {
+  editingCategoriaId = null;
+  categoriaModal.classList.add('hidden');
+  categoriaModal.setAttribute('aria-hidden', 'true');
+}
+
+function openCategoriaViewModal(item) {
+  let html = `
+    <div class="view-group full-width">
+      <span class="view-label">ID</span>
+      <span class="view-value">${item.id}</span>
+    </div>
+    <div class="view-group full-width">
+      <span class="view-label">Nome da Categoria</span>
+      <span class="view-value" style="font-size:18px;font-weight:bold">${item.nome || '—'}</span>
+    </div>
+  `;
+  categoriaViewContent.innerHTML = html;
+  categoriaViewModal.classList.remove('hidden');
+  categoriaViewModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeCategoriaViewModal() {
+  categoriaViewModal.classList.add('hidden');
+  categoriaViewModal.setAttribute('aria-hidden', 'true');
+}
+
+if (novaCategoriaBtn) novaCategoriaBtn.addEventListener('click', () => openCategoriaModal('create'));
+if (categoriaModalCancel) categoriaModalCancel.addEventListener('click', () => closeCategoriaModal());
+if (categoriaModalClose) categoriaModalClose.addEventListener('click', () => closeCategoriaModal());
+if (categoriaViewClose) categoriaViewClose.addEventListener('click', () => closeCategoriaViewModal());
+if (categoriaViewOk) categoriaViewOk.addEventListener('click', () => closeCategoriaViewModal());
+
+if (categoriaModalForm) {
+  categoriaModalForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = categoriaInput.value.trim();
+    if (!nome) return showToast('Nome é obrigatório', 'error');
+
+    try {
+      let res;
+      if (editingCategoriaId) {
+        res = await request(`${api.categorias}/${editingCategoriaId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome }),
+        });
+      } else {
+        res = await request(api.categorias, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome }),
+        });
+      }
+
+      if (res.status === 200 || res.status === 201) {
+        showToast(editingCategoriaId ? 'Categoria atualizada' : 'Categoria criada');
+        closeCategoriaModal();
+        await loadList('categorias');
+      } else {
+        showToast((res.error && res.error.error) || 'Erro ao salvar categoria', 'error');
+      }
+    } catch (err) {
+      showToast('Erro de rede ao salvar', 'error');
+    }
+  });
+}
 
 // Livro modal (ADD / EDIT)
 // Modal elements
@@ -255,6 +413,13 @@ const livroModal = document.getElementById('livro-modal');
 const livroModalForm = document.getElementById('livro-modal-form');
 const livroModalTitle = document.getElementById('livro-modal-title');
 const livroModalCancel = document.getElementById('livro-modal-cancel');
+const livroModalClose = document.getElementById('livro-modal-close');
+
+// View Modal elements
+const livroViewModal = document.getElementById('livro-view-modal');
+const livroViewContent = document.getElementById('livro-view-content');
+const livroViewClose = document.getElementById('livro-view-close');
+const livroViewOk = document.getElementById('livro-view-ok');
 
 let editingLivroId = null;
 
@@ -275,7 +440,7 @@ function openLivroModal(mode, item = null) {
   livroTituloInput.value = item?.titulo || '';
   livroCounter.textContent = String(livroTituloInput.value.length || 0);
   livroEdicaoInput.value = item?.edicao || '';
-  livroImgInput.value = item?.img || '';
+  if (livroImgInput) livroImgInput.value = ''; // Reset file input
   livroIdiomaInput.value = item?.idioma || '';
   livroNumPaginasInput.value = item?.num_paginas ?? '';
   livroEditoraInput.value = item?.editora || '';
@@ -296,120 +461,147 @@ function closeLivroModal() {
   livroModal.setAttribute('aria-hidden', 'true');
 }
 
+function openLivroViewModal(item) {
+  const autorNome = item.autores ? item.autores.nome : (item.autor_nome || '—');
+  const categoriaNome = item.categorias ? item.categorias.nome : (item.categoria_nome || '—');
+  
+  let html = '';
+  
+  if (item.img) {
+    html += `<div class="view-image-container">
+      <img src="${item.img}" alt="Capa do livro" class="view-image" onerror="this.style.display='none'">
+    </div>`;
+  }
+  
+  html += `
+    <div class="view-group full-width">
+      <span class="view-label">Título</span>
+      <span class="view-value" style="font-size:18px;font-weight:bold">${item.titulo || '—'}</span>
+    </div>
+    <div class="view-group">
+      <span class="view-label">Autor</span>
+      <span class="view-value">${autorNome}</span>
+    </div>
+    <div class="view-group">
+      <span class="view-label">Categoria</span>
+      <span class="view-value">${categoriaNome}</span>
+    </div>
+    <div class="view-group">
+      <span class="view-label">Edição</span>
+      <span class="view-value">${item.edicao || '—'}</span>
+    </div>
+    <div class="view-group">
+      <span class="view-label">Idioma</span>
+      <span class="view-value">${item.idioma || '—'}</span>
+    </div>
+    <div class="view-group">
+      <span class="view-label">Número de Páginas</span>
+      <span class="view-value">${item.num_paginas ?? '—'}</span>
+    </div>
+    <div class="view-group">
+      <span class="view-label">Editora</span>
+      <span class="view-value">${item.editora || '—'}</span>
+    </div>
+    <div class="view-group">
+      <span class="view-label">Estoque</span>
+      <span class="view-value">${item.estoque ?? '—'}</span>
+    </div>
+    <div class="view-group">
+      <span class="view-label">Data de Publicação</span>
+      <span class="view-value">${formatDateForInput(item.data_publicacao) || '—'}</span>
+    </div>
+    <div class="view-group full-width">
+      <span class="view-label">Descrição</span>
+      <span class="view-value">${item.descricao || '—'}</span>
+    </div>
+  `;
+
+  livroViewContent.innerHTML = html;
+  livroViewModal.classList.remove('hidden');
+  livroViewModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeLivroViewModal() {
+  livroViewModal.classList.add('hidden');
+  livroViewModal.setAttribute('aria-hidden', 'true');
+}
+
 if (novoLivroBtn) novoLivroBtn.addEventListener('click', () => openLivroModal('create'));
 if (livroModalCancel) livroModalCancel.addEventListener('click', () => closeLivroModal());
+if (livroModalClose) livroModalClose.addEventListener('click', () => closeLivroModal());
+
+if (livroViewClose) livroViewClose.addEventListener('click', () => closeLivroViewModal());
+if (livroViewOk) livroViewOk.addEventListener('click', () => closeLivroViewModal());
 
 // close modal with Escape
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !livroModal.classList.contains('hidden')) closeLivroModal(); });
+document.addEventListener('keydown', (e) => { 
+  if (e.key === 'Escape') {
+    if (!livroModal.classList.contains('hidden')) closeLivroModal();
+    if (!livroViewModal.classList.contains('hidden')) closeLivroViewModal();
+    if (!autorModal.classList.contains('hidden')) closeAutorModal();
+    if (!autorViewModal.classList.contains('hidden')) closeAutorViewModal();
+    if (!categoriaModal.classList.contains('hidden')) closeCategoriaModal();
+    if (!categoriaViewModal.classList.contains('hidden')) closeCategoriaViewModal();
+  }
+});
 
 // submit modal form (create or update)
 if (livroModalForm) {
   livroModalForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const titulo = livroTituloInput.value.trim();
-    const autorId = Number(livroAutorSelect.value) || undefined;
-    const categoriaId = Number(livroCategoriaSelect.value) || undefined;
-    const edicao = livroEdicaoInput ? livroEdicaoInput.value.trim() : undefined;
-    const img = livroImgInput ? livroImgInput.value.trim() : undefined;
-    const idioma = livroIdiomaInput ? livroIdiomaInput.value.trim() : undefined;
-    const num_paginas = livroNumPaginasInput && livroNumPaginasInput.value !== '' ? Number(livroNumPaginasInput.value) : undefined;
-    const editora = livroEditoraInput ? livroEditoraInput.value.trim() : undefined;
-    const estoque = livroEstoqueInput && livroEstoqueInput.value !== '' ? Number(livroEstoqueInput.value) : undefined;
-    const data_publicacao = livroDataPublicacaoInput && livroDataPublicacaoInput.value ? livroDataPublicacaoInput.value : undefined;
-    const descricao = livroDescricaoInput ? livroDescricaoInput.value.trim() : undefined;
-
+    const autorId = livroAutorSelect.value;
+    const categoriaId = livroCategoriaSelect.value;
+    
     if (!titulo) return showToast('Título é obrigatório', 'error');
     if (!autorId) return showToast('Autor é obrigatório', 'error');
     if (!categoriaId) return showToast('Categoria é obrigatória', 'error');
 
-    const payload = {
-      titulo,
-      autorId,
-      categoriaId,
-      edicao: edicao || undefined,
-      img: img || undefined,
-      idioma: idioma || undefined,
-      num_paginas: num_paginas !== undefined ? num_paginas : undefined,
-      editora: editora || undefined,
-      estoque: estoque !== undefined ? estoque : undefined,
-      data_publicacao: data_publicacao || undefined,
-      descricao: descricao || undefined,
-    };
+    const formData = new FormData();
+    formData.append('titulo', titulo);
+    formData.append('autorId', autorId);
+    formData.append('categoriaId', categoriaId);
+    
+    if (livroEdicaoInput && livroEdicaoInput.value.trim()) formData.append('edicao', livroEdicaoInput.value.trim());
+    if (livroIdiomaInput && livroIdiomaInput.value.trim()) formData.append('idioma', livroIdiomaInput.value.trim());
+    if (livroNumPaginasInput && livroNumPaginasInput.value !== '') formData.append('num_paginas', livroNumPaginasInput.value);
+    if (livroEditoraInput && livroEditoraInput.value.trim()) formData.append('editora', livroEditoraInput.value.trim());
+    if (livroEstoqueInput && livroEstoqueInput.value !== '') formData.append('estoque', livroEstoqueInput.value);
+    if (livroDataPublicacaoInput && livroDataPublicacaoInput.value) formData.append('data_publicacao', livroDataPublicacaoInput.value);
+    if (livroDescricaoInput && livroDescricaoInput.value.trim()) formData.append('descricao', livroDescricaoInput.value.trim());
+    
+    if (livroImgInput && livroImgInput.files && livroImgInput.files[0]) {
+      formData.append('img', livroImgInput.files[0]);
+    }
 
     try {
       let res;
       if (editingLivroId) {
-        res = await request(`${api.livros}/${editingLivroId}`, {
+        res = await fetch(`${api.livros}/${editingLivroId}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: formData,
         });
       } else {
-        res = await request(api.livros, {
+        res = await fetch(api.livros, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: formData,
         });
       }
+
+      const isJson = res.headers.get('content-type')?.includes('application/json');
+      const data = isJson ? await res.json() : null;
 
       if (res.status === 200 || res.status === 201) {
         showToast(editingLivroId ? 'Livro atualizado' : 'Livro criado');
         closeLivroModal();
         await loadList('livros');
       } else {
-        showToast((res.error && (res.error.error || (res.error.errors && res.error.errors.join(', ')))) || 'Erro ao salvar livro', 'error');
+        showToast((data && (data.error || (data.errors && data.errors.join(', ')))) || 'Erro ao salvar livro', 'error');
       }
     } catch (err) {
       showToast('Erro de rede ao salvar', 'error');
     }
   });
-}
-
-// Edit (existing) kept for autores/categorias
-function startEdit(li, item, resource) {
-  const left = li.querySelector('.left');
-  left.innerHTML = '';
-  const input = document.createElement('input');
-  input.className = 'inline-input';
-  input.value = item.nome;
-  input.maxLength = 200;
-  left.appendChild(input);
-
-  const actions = li.querySelector('.actions');
-  actions.innerHTML = '';
-
-  const saveBtn = document.createElement('button');
-  saveBtn.className = 'btn save';
-  saveBtn.textContent = 'Salvar';
-  saveBtn.addEventListener('click', () => saveEdit(item.id, input.value, resource, li));
-
-  const cancelBtn = document.createElement('button');
-  cancelBtn.className = 'btn cancel';
-  cancelBtn.textContent = 'Cancelar';
-  cancelBtn.addEventListener('click', async () => { await loadList(resource); });
-
-  actions.appendChild(saveBtn);
-  actions.appendChild(cancelBtn);
-  input.focus();
-}
-
-async function saveEdit(id, nome, resource, li) {
-  const trimmed = nome.trim();
-  if (!trimmed) return showToast('Nome não pode ser vazio', 'error');
-  const res = await request(`${api[resource]}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nome: trimmed }),
-  });
-  if (res.status === 200) {
-    showToast('Atualizado com sucesso');
-    await loadList(resource);
-  } else if (res.status === 404) {
-    showToast('Registro não encontrado', 'error');
-    await loadList(resource);
-  } else {
-    showToast((res.error && res.error.error) || (res.error && res.error.message) || 'Erro ao atualizar', 'error');
-  }
 }
 
 // Confirmation modal helper
