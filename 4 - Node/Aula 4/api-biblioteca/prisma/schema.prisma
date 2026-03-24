@@ -39,19 +39,6 @@ model livros {
   @@map("livros")
 }
 
-model alunos {
-  id              Int       @id @default(autoincrement())
-  nome            String    @db.VarChar(200)
-  matricula       String?   @db.VarChar(20)
-  curso           String?   @db.VarChar(100)
-  cpf             String?   @db.Char(11)
-  data_nascimento DateTime? @db.Date
-  email           String?   @db.VarChar(200)
-  senha           String?   @db.VarChar(100)
-  status          String?   @db.VarChar(20)
-  pedidos         pedidos[]
-}
-
 model usuarios {
   id               Int      @id @default(autoincrement())
   nome             String   @db.VarChar(200)
@@ -63,16 +50,17 @@ model usuarios {
   email            String   @unique @db.VarChar(200)
   senha            String   @db.VarChar(100)
   status           String   @db.VarChar(20)
+  pedidos          pedidos[]  // Adicionei esta relação se 'pedidos' agora referenciar 'usuarios'
 }
 
 model pedidos {
   id            Int       @id @default(autoincrement())
   livro_id      Int
-  aluno_id      Int
+  usuario_id    Int       // Mudei de 'aluno_id' para 'usuario_id' para refletir a mudança
   data_inicio   DateTime? @db.Date
   data_prevista DateTime? @db.Date
   data_entrega  DateTime? @db.Date
   status        String?   @db.VarChar(20)
-  alunos        alunos    @relation(fields: [aluno_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedidos_alunos")
+  usuarios      usuarios  @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedidos_usuarios")  // Ajustei para 'usuarios'
   livros        livros    @relation(fields: [livro_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedidos_livros")
 }
