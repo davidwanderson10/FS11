@@ -4,6 +4,7 @@ import cors from 'cors';
 import autoresRoutes from './routes/autoresRoutes.js';
 import categoriasRoutes from './routes/categoriasRoutes.js';
 import livrosRoutes from './routes/livrosRoutes.js';
+import loginRoutes from './routes/loginRoutes.js';
 
 const app = express(); // Criando a aplicação Express
 
@@ -20,6 +21,7 @@ app.use(express.static('public'));
 app.use('/autores', autoresRoutes);
 app.use('/categorias', categoriasRoutes);
 app.use('/livros', livrosRoutes);
+app.use('/login', loginRoutes);
 
 const PORT = 3000; // Definindo a porta do servidor
 app.listen(PORT, () => {
