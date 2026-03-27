@@ -9,6 +9,10 @@ export async function login(req, res) {
   const { email, senha } = req.body;
 
   try {
+    if (!email || !senha) {
+      return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+    }
+
     const usuario = await prisma.usuarios.findUnique({
       where: { email },
     });

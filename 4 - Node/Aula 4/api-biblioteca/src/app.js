@@ -5,6 +5,8 @@ import autoresRoutes from './routes/autoresRoutes.js';
 import categoriasRoutes from './routes/categoriasRoutes.js';
 import livrosRoutes from './routes/livrosRoutes.js';
 import loginRoutes from './routes/loginRoutes.js';
+import usuariosRoutes from './routes/usuariosRoutes.js';
+import validateTokenRoutes from './routes/validateTokenRoutes.js';
 
 const app = express(); // Criando a aplicação Express
 
@@ -22,6 +24,8 @@ app.use('/autores', autoresRoutes);
 app.use('/categorias', categoriasRoutes);
 app.use('/livros', livrosRoutes);
 app.use('/login', loginRoutes);
+app.use('/usuarios', usuariosRoutes);
+app.use('/validate-token', validateTokenRoutes);
 
 const PORT = 3000; // Definindo a porta do servidor
 app.listen(PORT, () => {

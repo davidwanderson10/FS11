@@ -8,11 +8,12 @@
 </head>
 <body>
   <header>
-    <h1>API Biblioteca — Autores, Categorias & Livros</h1>
+    <h1>API Biblioteca — Autores, Categorias, Livros & Usuarios</h1>
     <nav>
       <button id="tab-autores" class="active">Autores</button>
       <button id="tab-categorias">Categorias</button>
       <button id="tab-livros">Livros</button>
+      <button id="tab-usuarios">Usuarios</button>
     </nav>
   </header>
 
@@ -69,6 +70,24 @@
 
       <ul id="livros-list" class="list"></ul>
       <div id="livros-empty" class="empty hidden">Nenhum livro encontrado.</div>
+    </section>
+
+    <section id="usuarios-section" class="panel hidden">
+      <h2>Usuarios</h2>
+
+      <div class="row">
+        <div style="display:flex;gap:8px;align-items:center;width:100%;">
+          <button id="novo-usuario-btn" class="btn" type="button">Novo Usuario</button>
+          <div style="flex:1"></div>
+        </div>
+
+        <div class="search">
+          <input id="usuario-search" placeholder="Buscar usuarios..." aria-label="Buscar usuarios">
+        </div>
+      </div>
+
+      <ul id="usuarios-list" class="list"></ul>
+      <div id="usuarios-empty" class="empty hidden">Nenhum usuario encontrado.</div>
     </section>
   </main>
 
@@ -234,6 +253,83 @@
       </div>
       <div class="form-actions">
         <button type="button" id="livro-view-ok" class="btn save">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usuario modal (ADD / EDIT) -->
+  <div id="usuario-modal" class="modal hidden" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content large" role="document">
+      <div class="modal-header">
+        <h3 id="usuario-modal-title">Novo Usuario</h3>
+        <button id="usuario-modal-close" class="btn icon close" aria-label="Fechar">&times;</button>
+      </div>
+      <form id="usuario-modal-form" class="form-grid">
+        <div class="form-group">
+          <label for="usuario-nome-modal">Nome</label>
+          <input id="usuario-nome-modal" placeholder="Ex: João Silva" maxlength="200" required aria-label="Nome do usuario">
+        </div>
+        <div class="form-group">
+          <label for="usuario-matricula-modal">Matrícula</label>
+          <input id="usuario-matricula-modal" placeholder="Ex: 12345" maxlength="50" aria-label="Matrícula">
+        </div>
+        <div class="form-group">
+          <label for="usuario-perfil-modal">Perfil</label>
+          <select id="usuario-perfil-modal" required aria-label="Perfil">
+            <option value="">-- Selecione --</option>
+            <option value="aluno">Aluno</option>
+            <option value="professor">Professor</option>
+            <option value="administrador">Administrador</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="usuario-curso-modal">Curso</label>
+          <input id="usuario-curso-modal" placeholder="Ex: Engenharia" maxlength="100" aria-label="Curso">
+        </div>
+        <div class="form-group">
+          <label for="usuario-cpf-modal">CPF</label>
+          <input id="usuario-cpf-modal" placeholder="Ex: 123.456.789-00" maxlength="14" required aria-label="CPF">
+        </div>
+        <div class="form-group">
+          <label for="usuario-data_nascimento-modal">Data de Nascimento</label>
+          <input id="usuario-data_nascimento-modal" type="date" required aria-label="Data de nascimento">
+        </div>
+        <div class="form-group">
+          <label for="usuario-email-modal">Email</label>
+          <input id="usuario-email-modal" type="email" placeholder="Ex: joao@email.com" maxlength="200" required aria-label="Email">
+        </div>
+        <div class="form-group">
+          <label for="usuario-senha-modal">Senha</label>
+          <input id="usuario-senha-modal" type="password" placeholder="Senha" maxlength="100" required aria-label="Senha">
+        </div>
+        <div class="form-group">
+          <label for="usuario-status-modal">Status</label>
+          <select id="usuario-status-modal" required aria-label="Status">
+            <option value="">-- Selecione --</option>
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="button" id="usuario-modal-cancel" class="btn cancel">Cancelar</button>
+          <button type="submit" id="usuario-modal-save" class="btn save">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Usuario View Modal -->
+  <div id="usuario-view-modal" class="modal hidden" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content large" role="document">
+      <div class="modal-header">
+        <h3 id="usuario-view-title">Detalhes do Usuario</h3>
+        <button id="usuario-view-close" class="btn icon close" aria-label="Fechar">&times;</button>
+      </div>
+      <div id="usuario-view-content" class="view-content">
+        <!-- Detalhes preenchidos via JS -->
+      </div>
+      <div class="form-actions">
+        <button type="button" id="usuario-view-ok" class="btn save">Fechar</button>
       </div>
     </div>
   </div>
