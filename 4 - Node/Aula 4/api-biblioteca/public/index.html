@@ -14,10 +14,30 @@
       <button id="tab-categorias">Categorias</button>
       <button id="tab-livros">Livros</button>
       <button id="tab-usuarios">Usuarios</button>
+      <button id="logout-btn" class="btn logout" style="margin-left: auto;">Logout</button>
     </nav>
   </header>
 
-  <main>
+  <!-- Login Section -->
+  <section id="login-section" class="login-panel">
+    <div class="login-container">
+      <h2>Login</h2>
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" placeholder="Digite seu email" required aria-label="Email">
+        </div>
+        <div class="form-group">
+          <label for="login-senha">Senha</label>
+          <input id="login-senha" type="password" placeholder="Digite sua senha" required aria-label="Senha">
+        </div>
+        <button type="submit" class="btn login-btn">Entrar</button>
+      </form>
+      <div id="login-error" class="error-message hidden"></div>
+    </div>
+  </section>
+
+  <main class="hidden">
     <section id="autores-section" class="panel">
       <h2>Autores</h2>
 

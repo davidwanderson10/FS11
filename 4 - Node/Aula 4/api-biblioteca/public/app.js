@@ -3,18 +3,31 @@ const api = {
   autores: '/autores',
   categorias: '/categorias',
   livros: '/livros',
+  usuarios: '/usuarios',
+  login: '/login'
 };
 
 // UI elements
+const loginSection = document.getElementById('login-section');
+const loginForm = document.getElementById('login-form');
+const loginEmail = document.getElementById('login-email');
+const loginSenha = document.getElementById('login-senha');
+const loginError = document.getElementById('login-error');
+const logoutBtn = document.getElementById('logout-btn');
+const main = document.querySelector('main');
+
 const tabAutores = document.getElementById('tab-autores');
 const tabCategorias = document.getElementById('tab-categorias');
 const tabLivros = document.getElementById('tab-livros');
+const tabUsuarios = document.getElementById('tab-usuarios');
 const autoresSection = document.getElementById('autores-section');
 const categoriasSection = document.getElementById('categorias-section');
 const livrosSection = document.getElementById('livros-section');
+const usuariosSection = document.getElementById('usuarios-section');
 const autoresList = document.getElementById('autores-list');
 const categoriasList = document.getElementById('categorias-list');
 const livrosList = document.getElementById('livros-list');
+const usuariosList = document.getElementById('usuarios-list');
 const toastEl = document.getElementById('toast');
 
 // Autor UI
@@ -73,10 +86,35 @@ const confirmMessage = document.getElementById('confirm-message');
 const confirmOk = document.getElementById('confirm-ok');
 const confirmCancel = document.getElementById('confirm-cancel');
 
+// Usuario UI
+const novoUsuarioBtn = document.getElementById('novo-usuario-btn');
+const usuarioModal = document.getElementById('usuario-modal');
+const usuarioModalForm = document.getElementById('usuario-modal-form');
+const usuarioModalTitle = document.getElementById('usuario-modal-title');
+const usuarioModalCancel = document.getElementById('usuario-modal-cancel');
+const usuarioModalClose = document.getElementById('usuario-modal-close');
+const usuarioNomeInput = document.getElementById('usuario-nome-modal');
+const usuarioMatriculaInput = document.getElementById('usuario-matricula-modal');
+const usuarioPerfilSelect = document.getElementById('usuario-perfil-modal');
+const usuarioCursoInput = document.getElementById('usuario-curso-modal');
+const usuarioCpfInput = document.getElementById('usuario-cpf-modal');
+const usuarioDataNascimentoInput = document.getElementById('usuario-data_nascimento-modal');
+const usuarioEmailInput = document.getElementById('usuario-email-modal');
+const usuarioSenhaInput = document.getElementById('usuario-senha-modal');
+const usuarioStatusSelect = document.getElementById('usuario-status-modal');
+const usuarioSearch = document.getElementById('usuario-search');
+const usuariosEmpty = document.getElementById('usuarios-empty');
+
+const usuarioViewModal = document.getElementById('usuario-view-modal');
+const usuarioViewContent = document.getElementById('usuario-view-content');
+const usuarioViewClose = document.getElementById('usuario-view-close');
+const usuarioViewOk = document.getElementById('usuario-view-ok');
+
 // Local caches
 let currentAutores = [];
 let currentCategorias = [];
 let currentLivros = [];
+let currentUsuarios = [];
 
 function showToast(message, type = 'success') {
   toastEl.textContent = message;
@@ -90,33 +128,55 @@ tabAutores.addEventListener('click', () => {
   tabAutores.classList.add('active');
   tabCategorias.classList.remove('active');
   tabLivros.classList.remove('active');
+  tabUsuarios.classList.remove('active');
   autoresSection.classList.remove('hidden');
   categoriasSection.classList.add('hidden');
   livrosSection.classList.add('hidden');
+  usuariosSection.classList.add('hidden');
 });
 
 tabCategorias.addEventListener('click', () => {
   tabCategorias.classList.add('active');
   tabAutores.classList.remove('active');
   tabLivros.classList.remove('active');
+  tabUsuarios.classList.remove('active');
   categoriasSection.classList.remove('hidden');
   autoresSection.classList.add('hidden');
   livrosSection.classList.add('hidden');
+  usuariosSection.classList.add('hidden');
 });
 
 tabLivros.addEventListener('click', () => {
   tabLivros.classList.add('active');
   tabAutores.classList.remove('active');
   tabCategorias.classList.remove('active');
+  tabUsuarios.classList.remove('active');
   livrosSection.classList.remove('hidden');
   autoresSection.classList.add('hidden');
   categoriasSection.classList.add('hidden');
+  usuariosSection.classList.add('hidden');
+});
+
+tabUsuarios.addEventListener('click', () => {
+  tabUsuarios.classList.add('active');
+  tabAutores.classList.remove('active');
+  tabCategorias.classList.remove('active');
+  tabLivros.classList.remove('active');
+  usuariosSection.classList.remove('hidden');
+  autoresSection.classList.add('hidden');
+  categoriasSection.classList.add('hidden');
+  livrosSection.classList.add('hidden');
 });
 
 // Helpers
 async function request(url, options = {}) {
+  const token = localStorage.getItem('token');
+  const headers = { ...options.headers };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
   try {
-    const res = await fetch(url, options);
+    const res = await fetch(url, { ...options, headers });
     if (res.status === 204) return { status: 204 };
     const contentType = res.headers.get('content-type') || '';
     const data = contentType.includes('application/json') ? await res.json() : null;
@@ -164,6 +224,7 @@ function createItemElement(item, resource) {
     if (resource === 'livros') openLivroModal('edit', item);
     else if (resource === 'autores') openAutorModal('edit', item);
     else if (resource === 'categorias') openCategoriaModal('edit', item);
+    else if (resource === 'usuarios') openUsuarioModal('edit', item);
   });
 
   const deleteBtn = document.createElement('button');
@@ -178,6 +239,7 @@ function createItemElement(item, resource) {
     if (resource === 'livros') openLivroViewModal(item);
     else if (resource === 'autores') openAutorViewModal(item);
     else if (resource === 'categorias') openCategoriaViewModal(item);
+    else if (resource === 'usuarios') openUsuarioViewModal(item);
   });
   actions.appendChild(viewBtn);
 
@@ -214,6 +276,17 @@ function renderList(resource, filter = '') {
       livrosEmpty.classList.add('hidden');
       filtered.forEach(item => listEl.appendChild(createItemElement(item, 'livros')));
     }
+  } else if (resource === 'usuarios') {
+    const listEl = usuariosList;
+    const data = currentUsuarios;
+    const filtered = data.filter(d => d.nome.toLowerCase().includes(filter.toLowerCase()) || d.email.toLowerCase().includes(filter.toLowerCase()));
+    listEl.innerHTML = '';
+    if (filtered.length === 0) {
+      usuariosEmpty.classList.remove('hidden');
+    } else {
+      usuariosEmpty.classList.add('hidden');
+      filtered.forEach(item => listEl.appendChild(createItemElement(item, 'usuarios')));
+    }
   }
 }
 
@@ -232,6 +305,9 @@ async function loadList(resource) {
   } else if (resource === 'livros') {
     currentLivros = res.data;
     renderList('livros', livroSearch.value || '');
+  } else if (resource === 'usuarios') {
+    currentUsuarios = res.data;
+    renderList('usuarios', usuarioSearch.value || '');
   }
 }
 
@@ -422,6 +498,7 @@ const livroViewClose = document.getElementById('livro-view-close');
 const livroViewOk = document.getElementById('livro-view-ok');
 
 let editingLivroId = null;
+let editingUsuarioId = null;
 
 function formatDateForInput(dateStr) {
   if (!dateStr) return '';
@@ -533,11 +610,68 @@ if (livroModalClose) livroModalClose.addEventListener('click', () => closeLivroM
 if (livroViewClose) livroViewClose.addEventListener('click', () => closeLivroViewModal());
 if (livroViewOk) livroViewOk.addEventListener('click', () => closeLivroViewModal());
 
+// Usuario modal functions
+function openUsuarioModal(mode, item = null) {
+  editingUsuarioId = item ? item.id : null;
+  usuarioModalTitle.textContent = mode === 'create' ? 'Novo Usuario' : 'Editar Usuario';
+  if (mode === 'edit' && item) {
+    usuarioNomeInput.value = item.nome || '';
+    usuarioMatriculaInput.value = item.matricula || '';
+    usuarioPerfilSelect.value = item.perfil || '';
+    usuarioCursoInput.value = item.curso || '';
+    usuarioCpfInput.value = item.cpf || '';
+    usuarioDataNascimentoInput.value = item.data_nascimento ? item.data_nascimento.split('T')[0] : '';
+    usuarioEmailInput.value = item.email || '';
+    usuarioSenhaInput.value = ''; // Don't prefill password
+    usuarioStatusSelect.value = item.status || '';
+  } else {
+    usuarioModalForm.reset();
+  }
+  usuarioModal.classList.remove('hidden');
+  usuarioModal.setAttribute('aria-hidden', 'false');
+  usuarioNomeInput.focus();
+}
+
+function closeUsuarioModal() {
+  usuarioModal.classList.add('hidden');
+  usuarioModal.setAttribute('aria-hidden', 'true');
+  editingUsuarioId = null;
+}
+
+function openUsuarioViewModal(item) {
+  usuarioViewContent.innerHTML = `
+    <p><strong>Nome:</strong> ${item.nome || '—'}</p>
+    <p><strong>Matrícula:</strong> ${item.matricula || '—'}</p>
+    <p><strong>Perfil:</strong> ${item.perfil || '—'}</p>
+    <p><strong>Curso:</strong> ${item.curso || '—'}</p>
+    <p><strong>CPF:</strong> ${item.cpf || '—'}</p>
+    <p><strong>Data de Nascimento:</strong> ${item.data_nascimento ? new Date(item.data_nascimento).toLocaleDateString('pt-BR') : '—'}</p>
+    <p><strong>Email:</strong> ${item.email || '—'}</p>
+    <p><strong>Status:</strong> ${item.status || '—'}</p>
+  `;
+  usuarioViewModal.classList.remove('hidden');
+  usuarioViewModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeUsuarioViewModal() {
+  usuarioViewModal.classList.add('hidden');
+  usuarioViewModal.setAttribute('aria-hidden', 'true');
+}
+
+if (novoUsuarioBtn) novoUsuarioBtn.addEventListener('click', () => openUsuarioModal('create'));
+if (usuarioModalCancel) usuarioModalCancel.addEventListener('click', () => closeUsuarioModal());
+if (usuarioModalClose) usuarioModalClose.addEventListener('click', () => closeUsuarioModal());
+
+if (usuarioViewClose) usuarioViewClose.addEventListener('click', () => closeUsuarioViewModal());
+if (usuarioViewOk) usuarioViewOk.addEventListener('click', () => closeUsuarioViewModal());
+
 // close modal with Escape
 document.addEventListener('keydown', (e) => { 
   if (e.key === 'Escape') {
     if (!livroModal.classList.contains('hidden')) closeLivroModal();
     if (!livroViewModal.classList.contains('hidden')) closeLivroViewModal();
+    if (!usuarioModal.classList.contains('hidden')) closeUsuarioModal();
+    if (!usuarioViewModal.classList.contains('hidden')) closeUsuarioViewModal();
     if (!autorModal.classList.contains('hidden')) closeAutorModal();
     if (!autorViewModal.classList.contains('hidden')) closeAutorViewModal();
     if (!categoriaModal.classList.contains('hidden')) closeCategoriaModal();
@@ -604,6 +738,62 @@ if (livroModalForm) {
   });
 }
 
+usuarioModalForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const nome = usuarioNomeInput.value.trim();
+  const matricula = usuarioMatriculaInput.value.trim();
+  const perfil = usuarioPerfilSelect.value;
+  const curso = usuarioCursoInput.value.trim();
+  const cpf = usuarioCpfInput.value.trim();
+  const dataNascimento = usuarioDataNascimentoInput.value;
+  const email = usuarioEmailInput.value.trim();
+  const senha = usuarioSenhaInput.value.trim();
+  const status = usuarioStatusSelect.value;
+
+  if (!nome || !cpf || !dataNascimento || !email || !senha || !perfil || !status) {
+    return showToast('Todos os campos obrigatórios devem ser preenchidos', 'error');
+  }
+
+  const usuarioData = {
+    nome,
+    matricula,
+    perfil,
+    curso,
+    cpf,
+    data_nascimento: dataNascimento,
+    email,
+    senha,
+    status
+  };
+
+  try {
+    let res;
+    if (editingUsuarioId) {
+      res = await request(`${api.usuarios}/${editingUsuarioId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(usuarioData)
+      });
+    } else {
+      res = await request(api.usuarios, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(usuarioData)
+      });
+    }
+
+    if (res.status === 200 || res.status === 201) {
+      showToast(editingUsuarioId ? 'Usuario atualizado' : 'Usuario criado');
+      closeUsuarioModal();
+      await loadList('usuarios');
+    } else {
+      showToast((res.error && res.error.error) || 'Erro ao salvar usuario', 'error');
+    }
+  } catch (err) {
+    showToast('Erro de rede ao salvar', 'error');
+  }
+});
+
 // Confirmation modal helper
 function showConfirm(message) {
   return new Promise((resolve) => {
@@ -655,20 +845,90 @@ function debounce(fn, wait = 250) {
 autorSearch.addEventListener('input', debounce((e) => renderList('autores', e.target.value)));
 categoriaSearch.addEventListener('input', debounce((e) => renderList('categorias', e.target.value)));
 livroSearch.addEventListener('input', debounce((e) => renderList('livros', e.target.value)));
+usuarioSearch.addEventListener('input', debounce((e) => renderList('usuarios', e.target.value)));
 
 // Character counters
 autorInput.addEventListener('input', () => autorCounter.textContent = String(autorInput.value.length));
 categoriaInput.addEventListener('input', () => categoriaCounter.textContent = String(categoriaInput.value.length));
 livroTituloInput.addEventListener('input', () => livroCounter.textContent = String(livroTituloInput.value.length));
 
+// Login functions
+async function login(email, senha) {
+  const res = await request(api.login, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, senha })
+  });
+  if (res.status === 200 && res.data.token) {
+    localStorage.setItem('token', res.data.token);
+    showMain();
+    await loadAllLists();
+    return true;
+  } else {
+    const errorMsg = (res.error && res.error.error) || 'Erro no login';
+    loginError.textContent = errorMsg;
+    loginError.classList.remove('hidden');
+    return false;
+  }
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  showLogin();
+}
+
+function showLogin() {
+  loginSection.classList.remove('hidden');
+  main.classList.add('hidden');
+  logoutBtn.classList.add('hidden');
+}
+
+function showMain() {
+  loginSection.classList.add('hidden');
+  main.classList.remove('hidden');
+  logoutBtn.classList.remove('hidden');
+}
+
+async function loadAllLists() {
+  await loadList('autores');
+  await loadList('categorias');
+  await loadList('livros');
+  await loadList('usuarios');
+}
+
+// Event listeners for login
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = loginEmail.value.trim();
+  const senha = loginSenha.value.trim();
+  if (await login(email, senha)) {
+    loginForm.reset();
+    loginError.classList.add('hidden');
+  }
+});
+
+logoutBtn.addEventListener('click', logout);
+
 // Init
 (async function init() {
+  // Check if token exists
+  const token = localStorage.getItem('token');
+  if (token) {
+    // Try to validate token by making a request
+    const res = await request('/validate-token');
+    if (res.status === 200) {
+      showMain();
+      await loadAllLists();
+    } else {
+      localStorage.removeItem('token');
+      showLogin();
+    }
+  } else {
+    showLogin();
+  }
+
   // set initial counters
   autorCounter.textContent = String(autorInput.value.length || 0);
   categoriaCounter.textContent = String(categoriaInput.value.length || 0);
   livroCounter.textContent = String(livroTituloInput.value.length || 0);
-
-  await loadList('autores');
-  await loadList('categorias');
-  await loadList('livros');
 })();

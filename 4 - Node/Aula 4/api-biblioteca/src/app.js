@@ -7,6 +7,7 @@ import livrosRoutes from './routes/livrosRoutes.js';
 import loginRoutes from './routes/loginRoutes.js';
 import usuariosRoutes from './routes/usuariosRoutes.js';
 import validateTokenRoutes from './routes/validateTokenRoutes.js';
+import pedidosRoutes from './routes/pedidosRoutes.js';
 
 const app = express(); // Criando a aplicação Express
 
@@ -26,6 +27,7 @@ app.use('/livros', livrosRoutes);
 app.use('/login', loginRoutes);
 app.use('/usuarios', usuariosRoutes);
 app.use('/validate-token', validateTokenRoutes);
+app.use('/pedidos', pedidosRoutes);
 
 const PORT = 3000; // Definindo a porta do servidor
 app.listen(PORT, () => {
