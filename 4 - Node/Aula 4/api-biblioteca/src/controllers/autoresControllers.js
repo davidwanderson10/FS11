@@ -75,11 +75,6 @@ export async function updateAutor(req, res) {
 export async function deleteAutor(req, res) {
   try {
     const id = parseInt(req.params.id, 10);
-    const usuario = req.usuario;
-
-    if (usuario.perfil !== 'Admin') {
-      return res.status(403).json({ error: 'Privilégios insuficientes para realizar esta operação.' });
-    }
 
     if (Number.isNaN(id)) {
       return res.status(400).json({ error: 'ID inválido' });
@@ -98,5 +93,3 @@ export async function deleteAutor(req, res) {
   }
 }
 
-
-// FRONT -> CHAMA A ROTA NO APP -> QUE CHAMA O CONTROLLER -> QUE CHAMA O PRISMA -> QUE ACESSA O BANCO DE DADOS E RETORNA A RESPOSTA PARA O FRONT.

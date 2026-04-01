@@ -9,6 +9,8 @@ import {
   updateLivro,
   deleteLivro,
 } from '../controllers/livrosControllers.js';
+import { validateToken } from '../controllers/validateTokenControllers.js';
+import { validateAdmin } from '../helpers/common.js';
 
 const router = express.Router();
 
@@ -39,18 +41,18 @@ const upload = multer({
 });
 
 // GET /livros
-router.get('/', getLivros);
+router.get('/', validateToken, getLivros);
 
 // GET /livros/:id
-router.get('/:id', getLivroById);
+router.get('/:id', validateToken, getLivroById);
 
 // POST /livros
-router.post('/', upload.single('img'), createLivro);
+router.post('/', validateToken, validateAdmin, upload.single('img'), createLivro);
 
 // PUT /livros/:id
-router.put('/:id', upload.single('img'), updateLivro);
+router.put('/:id', validateToken, validateAdmin, upload.single('img'), updateLivro);
 
 // DELETE /livros/:id
-router.delete('/:id', deleteLivro);
+router.delete('/:id', validateToken, validateAdmin, deleteLivro);
 
 export default router;
