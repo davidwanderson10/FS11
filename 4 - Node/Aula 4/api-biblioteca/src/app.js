@@ -8,11 +8,18 @@ import loginRoutes from './routes/loginRoutes.js';
 import usuariosRoutes from './routes/usuariosRoutes.js';
 import validateTokenRoutes from './routes/validateTokenRoutes.js';
 import pedidosRoutes from './routes/pedidosRoutes.js';
+import {swaggerUi, swaggerDocument} from '../swagger.js';
 
 const app = express(); // Criando a aplicação Express
 
 // Middleware de CORS
 app.use(cors());
+
+// Middleware para parsear JSON - DEVE VIR ANTES DAS ROTAS
+app.use(express.json());
+
+// Configurando o Swagger
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Middleware para parsear JSON - DEVE VIR ANTES DAS ROTAS
 app.use(express.json());

@@ -13,6 +13,25 @@ export async function getAllCategorias(req, res) {
   }
 }
 
+// lista a categoria por id
+export async function getCategoriaById(req, res) {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+    const categoria = await prisma.categorias.findUnique({ where: { id } });
+    if (!categoria) {
+      return res.status(404).json({ error: 'Categoria não encontrada' });
+    }
+    res.json(categoria);
+  } catch (error) {
+    console.error('Erro ao buscar categoria:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+}
+
+
 // cria uma nova categoria
 export async function createCategoria(req, res) {
   try {

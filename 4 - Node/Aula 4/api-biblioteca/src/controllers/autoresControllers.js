@@ -13,6 +13,24 @@ export async function getAllAutores(req, res) {
   }
 }
 
+// lista o autor por id
+export async function getAutorById(req, res) {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+    const autor = await prisma.autores.findUnique({ where: { id } });
+    if (!autor) {
+      return res.status(404).json({ error: 'Autor não encontrado' });
+    }
+    res.json(autor);
+  } catch (error) {
+    console.error('Erro ao buscar autor:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+}
+
 // cria um novo autor
 export async function createAutor(req, res) {
   try {
