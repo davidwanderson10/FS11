@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -35,6 +36,9 @@ export async function createUsuario(req, res) {
     return res.status(400).json({ error: 'Campos obrigatórios: nome, cpf, email, senha, perfil, status, data_nascimento' });
   }
 
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(senha, saltRounds);
+
   try {
     const usuario = await prisma.usuarios.create({
       data: {
@@ -45,7 +49,7 @@ export async function createUsuario(req, res) {
         cpf,
         data_nascimento: new Date(data_nascimento),
         email,
-        senha,
+        senha: hashedPassword,
         status,
       },
     });
@@ -66,6 +70,10 @@ export async function updateUsuario(req, res) {
   const { nome, matricula, perfil, curso, cpf, data_nascimento, email, senha, status } = req.body;
 
   try {
+
+    const saltRounds = 10;
+    const senhaHash = senha ? await bcrypt.hash(senha, saltRounds) : undefined;
+
     const usuario = await prisma.usuarios.update({
       where: { id },
       data: {
@@ -76,7 +84,7 @@ export async function updateUsuario(req, res) {
         cpf,
         data_nascimento: data_nascimento ? new Date(data_nascimento) : undefined,
         email,
-        senha,
+        senha: senhaHash,
         status,
       },
     });

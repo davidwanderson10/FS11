@@ -36,9 +36,12 @@ app.use('/usuarios', usuariosRoutes);
 app.use('/validate-token', validateTokenRoutes);
 app.use('/pedidos', pedidosRoutes);
 
-const PORT = 3000; // Definindo a porta do servidor
-app.listen(PORT, () => {
-  console.log(`Servidor rodando no link http://localhost:${PORT}`);
-});
-    
+if (process.env.NODE_ENV !== 'test') {
+  const PORT = 3000;
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando no link http://localhost:${PORT}`);
+  });
+}
+
+export default app;
 

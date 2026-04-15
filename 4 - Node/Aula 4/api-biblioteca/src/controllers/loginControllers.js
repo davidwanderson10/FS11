@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient({ datasourceUrl: process.env.DATABASE_URL });
 const secretKey = process.env.SECRET_KEY
@@ -17,7 +18,9 @@ export async function login(req, res) {
       where: { email },
     });
 
-    if (!usuario || usuario.senha !== senha) {
+    const isMatch = usuario ? await bcrypt.compare(senha, usuario.senha) : false;
+
+    if (!isMatch) {
       return res.status(401).json({ error: 'Credenciais inválidas' });
     }
 
